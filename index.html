@@ -4,1043 +4,717 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050812">
-<title>CAP VERSE | Ultimate Experience</title>
+<meta name="theme-color" content="#050914">
+<title>CAP VERSE | Intelligent Universe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:#050812;
-  --panel:#0b1221;
-  --panel2:#101c30;
-  --blue:#20c9ff;
-  --cyan:#66e5ff;
-  --purple:#8865ff;
-  --text:#edf7ff;
-  --muted:#8293aa;
-  --line:rgba(112,190,255,.14);
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,Helvetica,sans-serif;
-  min-height:100vh;
-  overflow-x:hidden;
-}
-button{font:inherit;cursor:pointer}
-button:focus-visible{outline:2px solid var(--cyan)}
-.hidden{display:none!important}
-
-/* CINEMATIC INTRO */
-#intro{
-  position:fixed;inset:0;z-index:9999;
-  background:#020307;
-  display:flex;align-items:center;justify-content:center;
-  flex-direction:column;overflow:hidden;
-  animation:backgroundReveal 3s ease forwards;
-}
-.intro-glow{
-  position:absolute;width:400px;height:400px;
-  background:radial-gradient(circle,rgba(0,160,255,.2),transparent 70%);
-  filter:blur(25px);
-  animation:glowPulse 3s infinite alternate;
-}
-.intro-line{
-  position:absolute;width:120%;height:2px;
-  background:linear-gradient(90deg,transparent,#27d7ff,#fff,#27d7ff,transparent);
-  box-shadow:0 0 25px #19caff;
-  transform:rotate(-15deg);
-  animation:lightSweep 3s ease-in-out forwards;
-}
-.intro-logo{
-  z-index:2;font-size:clamp(38px,9vw,90px);
-  font-weight:900;letter-spacing:12px;
-  color:#fff;text-align:center;
-  text-shadow:0 0 15px #19bfff,0 0 50px #007bff;
-  animation:logoReveal 2.5s cubic-bezier(.2,.8,.2,1) forwards;
-}
-.intro-sub{
-  z-index:2;margin-top:22px;
-  font-size:clamp(11px,2vw,16px);
-  letter-spacing:7px;color:#b5eaff;
-  opacity:0;animation:subReveal 1.5s 2s forwards;
-}
-.intro-loading{
-  z-index:2;margin-top:50px;width:180px;height:2px;
-  background:#18283a;overflow:hidden;
-}
-.intro-loading:after{
-  content:"";display:block;width:100%;height:100%;
-  background:#20c9ff;box-shadow:0 0 15px #20c9ff;
-  transform:translateX(-100%);
-  animation:loadLine 3.5s ease forwards;
-}
-#enterBtn{
-  z-index:3;margin-top:28px;padding:12px 30px;
-  background:transparent;border:1px solid #29cfff;
-  color:white;letter-spacing:4px;border-radius:3px;
-  opacity:0;animation:subReveal 1s 3.4s forwards;
-}
-@keyframes logoReveal{
-  0%{opacity:0;transform:scale(1.7);filter:blur(15px)}
-  70%{opacity:1;transform:scale(.98);filter:blur(0)}
-  100%{opacity:1;transform:scale(1)}
-}
-@keyframes subReveal{to{opacity:1}}
-@keyframes lightSweep{
-  0%{left:-130%;opacity:0}
-  35%{opacity:1}
-  100%{left:130%;opacity:0}
-}
-@keyframes glowPulse{to{transform:scale(1.4);opacity:.6}}
-@keyframes loadLine{to{transform:translateX(0)}}
-@keyframes backgroundReveal{to{background:#030711}}
-
-/* APP LAYOUT */
-#app{min-height:100vh}
-.sidebar{
-  position:fixed;left:0;top:0;bottom:0;width:245px;
-  background:rgba(7,13,25,.97);
-  border-right:1px solid var(--line);
-  padding:25px 16px;z-index:20;
-  display:flex;flex-direction:column;
-}
-.brand{
-  font-size:24px;font-weight:900;letter-spacing:4px;
-  color:white;padding:8px 12px 30px;
-  text-shadow:0 0 15px #13bfff;
-}
-.brand small{
-  display:block;font-size:9px;letter-spacing:5px;
-  color:var(--blue);margin-top:7px;
-}
-.nav-label{
-  color:#64778f;font-size:10px;
-  letter-spacing:3px;padding:15px 12px 9px;
-}
-.nav-btn{
-  display:flex;align-items:center;gap:13px;
-  padding:13px 14px;margin:3px 0;width:100%;
-  border:1px solid transparent;border-radius:8px;
-  background:transparent;color:#a9bad0;
-  text-align:left;font-size:13px;
-  transition:.25s;
-}
-.nav-btn:hover,.nav-btn.active{
-  background:linear-gradient(90deg,rgba(0,174,255,.15),transparent);
-  border-color:rgba(32,201,255,.2);
-  color:white;
-}
-.nav-btn.active{box-shadow:inset 3px 0 var(--blue)}
-.nav-icon{font-size:18px;width:22px;text-align:center}
-.sidebar-bottom{margin-top:auto;padding:15px 10px;color:#62758c;font-size:11px;line-height:1.8}
-
-.main{
-  margin-left:245px;padding:30px;
-  max-width:1600px;
-}
-.topbar{
-  display:flex;justify-content:space-between;
-  align-items:center;gap:15px;margin-bottom:30px;
-}
-.page-heading{font-size:23px;font-weight:800;letter-spacing:1px}
-.page-sub{color:var(--muted);font-size:12px;margin-top:7px}
-.status{
-  border:1px solid rgba(32,201,255,.25);
-  background:rgba(32,201,255,.07);
-  color:var(--cyan);padding:9px 13px;
-  border-radius:30px;font-size:10px;letter-spacing:2px;
-}
-.section{display:none}
-.section.active{display:block;animation:sectionIn .4s ease}
-@keyframes sectionIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-
-/* DASHBOARD */
-.hero{
-  padding:35px;border:1px solid var(--line);
-  border-radius:15px;
-  background:
-   radial-gradient(ellipse at 80% 10%,rgba(0,150,255,.17),transparent 55%),
-   linear-gradient(135deg,#101e35,#080d19);
-  min-height:230px;display:flex;align-items:center;
-}
-.hero h1{font-size:clamp(28px,4vw,48px);letter-spacing:2px}
-.hero h1 span{color:var(--blue)}
-.hero p{color:#a2b4ca;font-size:13px;margin-top:15px;line-height:1.8}
-.hero-tag{color:var(--cyan);font-size:10px;letter-spacing:4px;margin-bottom:15px}
-.cards{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:16px;margin-top:22px;
-}
-.card{
-  background:linear-gradient(145deg,#101b2d,#090f1b);
-  border:1px solid var(--line);border-radius:12px;
-  padding:22px;min-height:135px;
-  transition:.25s;
-}
-.card:hover{transform:translateY(-4px);border-color:rgba(32,201,255,.5)}
-.card-icon{font-size:25px}
-.card h3{font-size:14px;margin-top:15px}
-.card p{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.6}
-
-/* COMMON PANELS */
-.panel{
-  background:linear-gradient(145deg,#101b2d,#080e19);
-  border:1px solid var(--line);border-radius:13px;
-  padding:22px;margin-top:18px;
-}
-.panel-title{font-size:16px;font-weight:800;letter-spacing:1px}
-.panel-desc{color:var(--muted);font-size:12px;line-height:1.7;margin-top:8px}
-.chip-grid{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:12px;margin-top:20px;
-}
-.chip{
-  text-align:left;background:#0a1423;
-  border:1px solid var(--line);color:white;
-  padding:15px;border-radius:9px;min-height:75px;
-  transition:.2s;
-}
-.chip:hover,.chip.selected{
-  border-color:var(--blue);background:#10243a;
-}
-.chip strong{display:block;font-size:12px}
-.chip small{display:block;color:var(--muted);font-size:10px;margin-top:7px}
-
-/* BIOVERSE */
-.bio-layout{
-  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);
-  gap:18px;margin-top:18px;
-}
-.anatomy-stage{
-  min-height:430px;border:1px solid var(--line);
-  border-radius:13px;background:
-  radial-gradient(ellipse,rgba(0,150,255,.13),transparent 65%),#070d19;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;overflow:hidden;
-}
-.anatomy-stage:before{
-  content:"";position:absolute;inset:0;
-  background-image:linear-gradient(rgba(50,160,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(50,160,255,.04) 1px,transparent 1px);
-  background-size:25px 25px;
-}
-.body-figure{
-  position:relative;z-index:1;width:180px;height:360px;
-  border:1px solid rgba(70,205,255,.4);
-  border-radius:48% 48% 25% 25%;
-  background:linear-gradient(90deg,rgba(0,120,200,.07),rgba(80,210,255,.16),rgba(0,120,200,.07));
-  box-shadow:0 0 35px rgba(0,180,255,.16),inset 0 0 30px rgba(0,180,255,.1);
-}
-.body-figure:before{
-  content:"";position:absolute;width:65px;height:75px;
-  border:1px solid rgba(100,220,255,.5);border-radius:50%;
-  left:57px;top:-80px;background:rgba(30,140,210,.12);
-}
-.body-figure:after{
-  content:"";position:absolute;left:87px;top:0;height:100%;
-  border-left:1px dashed rgba(100,220,255,.35);
-}
-.body-organ{
-  position:absolute;z-index:2;border-radius:50%;
-  background:rgba(0,195,255,.65);
-  box-shadow:0 0 15px #0bbfff;
-  animation:pulse 2s infinite;
-}
-.organ-heart{width:25px;height:25px;top:105px;left:65px;background:#ff426d;box-shadow:0 0 20px #ff426d}
-.organ-lung{width:28px;height:45px;top:95px;left:32px;border-radius:50%}
-.organ-lung.right{left:120px}
-.organ-brain{width:30px;height:22px;top:-53px;left:74px}
-.organ-stomach{width:34px;height:29px;top:165px;left:75px;background:#ffad4d}
-@keyframes pulse{50%{transform:scale(1.13);opacity:.7}}
-.anatomy-label{
-  position:absolute;z-index:3;bottom:15px;left:15px;
-  font-size:9px;color:var(--cyan);letter-spacing:2px;
-}
-
-/* VITALS */
-.vital-grid{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:14px;margin-top:20px;
-}
-.vital-card{
-  background:#0c1728;border:1px solid var(--line);
-  border-radius:12px;padding:18px;
-}
-.vital-card .emoji{font-size:24px}
-.vital-card h3{font-size:13px;margin-top:12px}
-.vital-card p{font-size:10px;color:var(--muted);margin-top:7px;line-height:1.5}
-.vital-card button{
-  margin-top:13px;background:rgba(20,190,255,.1);
-  border:1px solid rgba(20,190,255,.3);
-  color:var(--cyan);padding:8px 11px;border-radius:6px;
-  font-size:10px;
-}
-.vital-value{font-size:23px;font-weight:800;color:var(--cyan);margin-top:10px}
-.field{
-  width:100%;padding:12px;background:#07101e;
-  border:1px solid var(--line);border-radius:7px;
-  color:white;margin-top:10px;
-}
-.action-btn{
-  padding:12px 18px;border:1px solid var(--blue);
-  background:rgba(0,170,255,.13);color:white;
-  border-radius:7px;margin-top:12px;
-}
-.note{font-size:10px;color:#8395ad;line-height:1.7;margin-top:12px}
-
-/* PREMIUM */
-.premium-box{
-  border:1px solid rgba(255,190,70,.3);
-  background:radial-gradient(ellipse at top,rgba(150,100,30,.16),transparent 65%),#0b101b;
-  border-radius:15px;padding:35px;text-align:center;margin-top:20px;
-}
-.lock-icon{font-size:55px;filter:drop-shadow(0 0 15px #e4a83b)}
-.gold{color:#ffd17c}
-.premium-box h2{font-size:25px;margin-top:15px;letter-spacing:2px}
-.premium-box p{color:var(--muted);font-size:12px;line-height:1.8;margin:15px auto;max-width:450px}
-.premium-feature{
-  display:inline-block;margin:5px;padding:9px 12px;
-  border:1px solid rgba(255,200,100,.2);
-  border-radius:20px;font-size:10px;color:#e8c98f;
-}
-
-/* MOBILE */
-.mobile-menu{display:none}
-@media(max-width:850px){
-  .sidebar{width:215px}
-  .main{margin-left:215px;padding:22px}
-  .cards,.vital-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .chip-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bio-layout{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .sidebar{
-    width:270px;transform:translateX(-100%);
-    transition:.3s;box-shadow:15px 0 40px #000;
-  }
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0;padding:17px}
-  .mobile-menu{display:block;background:#101d30;border:1px solid var(--line);color:white;padding:9px 12px;border-radius:7px}
-  .topbar{margin-bottom:20px}
-  .page-heading{font-size:18px}
-  .status{font-size:8px;padding:8px}
-  .cards,.vital-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-  .chip-grid{grid-template-columns:1fr 1fr;gap:8px}
-  .hero{padding:23px;min-height:200px}
-  .hero h1{font-size:29px}
-  .card{padding:15px}
-  .panel{padding:16px}
-}
+:root{--bg:#050914;--panel:#0b1425;--panel2:#101e34;--line:#203550;--cyan:#00eaff;--blue:#438cff;--text:#eaf6ff;--muted:#8ca5bd;--gold:#f4c66a}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 50% -20%,#12345a 0,#050914 48%);color:var(--text);font-family:Inter,Arial,sans-serif;min-height:100vh}
+button,input,select{font:inherit}
+button{cursor:pointer}
+#intro{position:fixed;inset:0;z-index:99;background:#02040a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .8s}
+.intro-mark{font:800 clamp(35px,9vw,76px) Orbitron;color:#eafaff;letter-spacing:8px;text-shadow:0 0 12px var(--cyan),0 0 40px #087bff;animation:reveal 2s ease both}
+.intro-sub{color:var(--cyan);letter-spacing:5px;margin:18px 0 35px;font-size:12px}
+@keyframes reveal{from{opacity:0;transform:scale(.7);filter:blur(15px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
+.primary{border:1px solid var(--cyan);background:linear-gradient(110deg,#063b58,#075c81);color:white;padding:13px 24px;border-radius:7px;font-weight:700;letter-spacing:1px;box-shadow:0 0 20px #00d9ff30}
+.primary:hover{box-shadow:0 0 25px #00d9ff70}
+#app{display:none;min-height:100vh}
+.topbar{height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--line);background:#07101deF;position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
+.brand{font:700 19px Orbitron;letter-spacing:2px;color:var(--cyan)}
+.status{font-size:11px;color:#71e9c1;letter-spacing:1px}
+.layout{display:flex;min-height:calc(100vh - 65px)}
+.sidebar{width:235px;flex-shrink:0;background:#07101c;border-right:1px solid var(--line);padding:18px 12px}
+.nav-label{font-size:10px;color:#64819c;letter-spacing:2px;padding:15px 10px 8px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1px solid transparent;background:transparent;color:#a9bed2;padding:12px;border-radius:8px;margin:3px 0}
+.nav-btn:hover,.nav-btn.active{background:#10243b;border-color:#1c5772;color:var(--cyan)}
+.nav-icon{width:22px;text-align:center;font-size:17px}
+main{flex:1;min-width:0;padding:25px;max-width:1500px;margin:auto;width:100%}
+.page{display:none;animation:fade .25s ease}
+.page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.eyebrow{color:var(--cyan);font:11px Orbitron;letter-spacing:3px}
+h1,h2,h3{font-family:Orbitron,sans-serif}
+h1{font-size:clamp(24px,4vw,38px);margin:10px 0}
+h2{font-size:20px}
+p{color:var(--muted);line-height:1.65}
+.hero{padding:28px;border:1px solid #214b69;border-radius:15px;background:linear-gradient(120deg,#102a43,#091525 70%);box-shadow:0 15px 45px #0005}
+.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:center}
+.hero-art{min-height:160px;display:grid;place-items:center;font-size:90px;color:var(--cyan);text-shadow:0 0 30px #00dfff}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:20px}
+.card{background:linear-gradient(145deg,#101f34,#091321);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
+.card h3{font-size:14px;margin:8px 0}
+.card p{font-size:13px;margin:6px 0}
+.card-icon{font-size:26px}
+.card-action{margin-top:12px;background:#102c45;border:1px solid #23516e;color:var(--cyan);padding:9px 12px;border-radius:6px;width:100%}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.input{width:100%;padding:12px;background:#071321;color:white;border:1px solid #29435d;border-radius:7px;outline:none;margin:6px 0}
+.input:focus{border-color:var(--cyan)}
+.small-btn{padding:9px 13px;border:1px solid #28617b;background:#102c45;color:var(--cyan);border-radius:6px}
+.muted{color:var(--muted);font-size:12px}
+.social-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.social-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
+.social-item{display:flex;align-items:center;gap:12px;background:#0c192a;border:1px solid var(--line);border-radius:10px;padding:13px}
+.social-item .social-symbol{font-size:24px}
+.social-item .social-info{flex:1;min-width:0}
+.social-item strong{display:block;font-size:13px}
+.social-item span{display:block;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+.social-item a{color:var(--cyan);font-size:12px;text-decoration:none}
+.social-item button{background:transparent;color:#ff8c8c;border:0;padding:5px}
+.viewer{min-height:300px;background:radial-gradient(circle,#12304a,#06101e 70%);border:1px solid #24516b;border-radius:12px;display:grid;place-items:center;overflow:hidden;position:relative}
+.viewer-inner{text-align:center;padding:25px}
+.viewer-figure{font-size:100px;filter:drop-shadow(0 0 25px #00cfff66)}
+.viewer-note{font-size:12px;color:#9db6cc}
+.anatomy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:15px 0}
+.anatomy-btn{padding:13px 10px;text-align:left;border-radius:8px;background:#0d1b2c;border:1px solid var(--line);color:#d7edff}
+.anatomy-btn:hover,.anatomy-btn.selected{border-color:var(--cyan);color:var(--cyan)}
+.detail{background:#0b1929;border:1px solid var(--line);border-radius:10px;padding:17px;margin-top:14px}
+.vital-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
+.vital-card{padding:16px;background:#0c1b2d;border:1px solid var(--line);border-radius:10px}
+.vital-card button{margin-top:10px;width:100%}
+.lock{color:var(--gold);font-size:12px}
+.footer{text-align:center;color:#526c84;font-size:11px;padding:30px 10px}
+@media(max-width:760px){.layout{display:block}.sidebar{width:100%;display:flex;overflow-x:auto;padding:8px;border-right:0;border-bottom:1px solid var(--line)}.nav-label{display:none}.nav-btn{width:auto;min-width:max-content;margin:0 3px;padding:10px}.nav-icon{display:none}main{padding:16px}.hero-grid{grid-template-columns:1fr}.hero-art{min-height:90px;font-size:65px}.social-form{grid-template-columns:1fr}.topbar{padding:0 13px}}
 </style>
 </head>
 <body>
-
-<!-- CINEMATIC OPENING -->
 <div id="intro">
-  <div class="intro-glow"></div>
-  <div class="intro-line"></div>
-  <div class="intro-logo">CAP VERSE</div>
-  <div class="intro-sub">WELCOME TO THE CAP VERSE</div>
-  <div class="intro-loading"></div>
-  <button id="enterBtn" onclick="enterVerse()">INITIALIZE EXPERIENCE</button>
+  <div class="intro-mark">CAP VERSE</div>
+  <div class="intro-sub">WELCOME TO YOUR DIGITAL UNIVERSE</div>
+  <button class="primary" onclick="enterVerse()">INITIALIZE SYSTEM</button>
 </div>
 
-<div id="app" class="hidden">
-
-<aside class="sidebar" id="sidebar">
-  <div class="brand">CAP VERSE<small>INTELLIGENCE SYSTEM</small></div>
-
-  <div class="nav-label">MAIN INTERFACE</div>
-  <button class="nav-btn active" data-page="dashboard"><span class="nav-icon">⌂</span> Dashboard</button>
-  <button class="nav-btn" data-page="bioverse"><span class="nav-icon">🧬</span> BioVerse</button>
-  <button class="nav-btn" data-page="vitals"><span class="nav-icon">❤️</span> Cap Vitals</button>
-
+<div id="app">
+<header class="topbar">
+  <div class="brand">✦ CAP VERSE</div>
+  <div class="status">● SYSTEM ONLINE</div>
+</header>
+<div class="layout">
+<aside class="sidebar">
+  <div class="nav-label">MAIN SYSTEM</div>
+  <button class="nav-btn active" data-page="home"><span class="nav-icon">⌂</span>Dashboard</button>
+  <button class="nav-btn" data-page="bio"><span class="nav-icon">◉</span>BioVerse</button>
+  <button class="nav-btn" data-page="vitals"><span class="nav-icon">♡</span>CAP VITALS</button>
+  <button class="nav-btn" data-page="social"><span class="nav-icon">◎</span>SocialVerse</button>
   <div class="nav-label">INTELLIGENCE</div>
-  <button class="nav-btn" data-page="ai"><span class="nav-icon">🤖</span> Cap AI <span style="margin-left:auto;color:#e9bd68">🔒</span></button>
-
-  <div class="sidebar-bottom">
-    SYSTEM STATUS: ONLINE<br>
-    CAP VERSE • VERSION 2.0<br>
-    FUTURE STARTS HERE
-  </div>
+  <button class="nav-btn" data-page="ai"><span class="nav-icon">✧</span>AI Engine <span class="lock">PREMIUM</span></button>
+  <button class="nav-btn" data-page="themes"><span class="nav-icon">◈</span>Themes</button>
 </aside>
 
-<main class="main">
-  <header class="topbar">
-    <div style="display:flex;align-items:center;gap:12px">
-      <button class="mobile-menu" onclick="toggleMenu()">☰</button>
-      <div>
-        <div class="page-heading" id="pageTitle">COMMAND CENTER</div>
-        <div class="page-sub">Welcome back to your digital universe.</div>
-      </div>
+<main>
+<section class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-grid">
+      <div><div class="eyebrow">PERSONAL COMMAND CENTER</div><h1>Welcome to CAP VERSE</h1><p>Your digital universe. Explore human biology, track personal wellness, manage your social profiles and access your tools from one place.</p><button class="primary" onclick="showPage('social')">OPEN SOCIALVERSE</button></div>
+      <div class="hero-art">◉</div>
     </div>
-    <div class="status">● SYSTEM ONLINE</div>
-  </header>
+  </div>
+  <div class="cards">
+    <div class="card"><div class="card-icon">🧬</div><h3>BioVerse</h3><p>Explore human anatomy and biological systems.</p><button class="card-action" onclick="showPage('bio')">Explore</button></div>
+    <div class="card"><div class="card-icon">♡</div><h3>CAP VITALS</h3><p>Personal wellness tools and trackers.</p><button class="card-action" onclick="showPage('vitals')">Open Vitals</button></div>
+    <div class="card"><div class="card-icon">◎</div><h3>SocialVerse</h3><p>Keep all your social profile links together.</p><button class="card-action" onclick="showPage('social')">Manage Profiles</button></div>
+    <div class="card"><div class="card-icon">✧</div><h3>AI Engine</h3><p>Advanced AI tools and intelligent assistance.</p><button class="card-action" onclick="showPage('ai')">View Access</button></div>
+  </div>
+</section>
 
-  <section class="section active" id="dashboard">
-    <div class="hero">
-      <div>
-        <div class="hero-tag">YOUR DIGITAL UNIVERSE</div>
-        <h1>WELCOME TO <span>CAP VERSE</span></h1>
-        <p>Explore human biology, monitor your daily wellness<br>and experience the next generation of digital intelligence.</p>
-      </div>
+<section class="page" id="page-social">
+  <div class="section-head"><div><div class="eyebrow">YOUR DIGITAL IDENTITY</div><h1>SocialVerse</h1><p>Add your usernames or profile URLs. Visitors can open your profiles directly.</p></div></div>
+  <div class="card">
+    <h3>＋ Add a profile</h3>
+    <div class="social-form">
+      <div><label class="muted">Platform</label><select class="input" id="socialPlatform"></select></div>
+      <div><label class="muted">Username or profile URL</label><input class="input" id="socialUsername" placeholder="@yourusername or https://..."></div>
     </div>
-    <div class="cards">
-      <button class="card" onclick="showPage('bioverse')">
-        <div class="card-icon">🧬</div><h3>BIOVERSE</h3>
-        <p>Explore human anatomy and biological systems.</p>
-      </button>
-      <button class="card" onclick="showPage('vitals')">
-        <div class="card-icon">❤️</div><h3>CAP VITALS</h3>
-        <p>Track activity, wellness and fitness goals.</p>
-      </button>
-      <button class="card" onclick="showPage('ai')">
-        <div class="card-icon">🔒</div><h3>CAP AI PREMIUM</h3>
-        <p>Premium intelligence access.</p>
-      </button>
-    </div>
-    <div class="panel">
-      <div class="panel-title">SYSTEM OVERVIEW</div>
-      <p class="panel-desc">Your command center is ready. Select a module from the navigation panel to begin exploring.</p>
-    </div>
-  </section>
+    <button class="primary" id="addSocial">SAVE PROFILE</button>
+    <p class="muted">Your profile list is saved in this browser. Add a full URL for custom domains such as Netlify.</p>
+  </div>
+  <div class="section-head"><h2>My Profiles</h2><input class="input" id="socialSearch" style="max-width:240px" placeholder="Search profiles..."></div>
+  <div class="social-list" id="socialList"></div>
+  <p class="muted" id="socialEmpty">No profiles added yet. Select a platform and add your username.</p>
+</section>
 
-  <section class="section" id="bioverse">
-    <div class="panel">
-      <div class="panel-title">🧬 BIOVERSE — HUMAN ANATOMY</div>
-      <p class="panel-desc">Explore human body systems, organs, tissues, structures and biological sciences. Select a category to view its anatomy.</p>
-      <input class="field" id="bioSearch" placeholder="Search systems, organs or anatomy...">
-    </div>
-    <div class="bio-layout">
-      <div class="anatomy-stage">
-        <div class="body-figure">
-          <div class="body-organ organ-brain"></div>
-          <div class="body-organ organ-lung"></div>
-          <div class="body-organ organ-lung right"></div>
-          <div class="body-organ organ-heart"></div>
-          <div class="body-organ organ-stomach"></div>
-        </div>
-        <div class="anatomy-label">HUMAN ANATOMY • SCHEMATIC VIEW</div>
-      </div>
-      <div class="panel" style="margin-top:0">
-        <div class="panel-title" id="bioSelectedTitle">SELECT A SYSTEM</div>
-        <p class="panel-desc" id="bioSelectedDesc">Choose a category to explore its structures and organs.</p>
-        <div id="bioDetails"></div>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="panel-title">ANATOMY LIBRARY</div>
-      <div class="chip-grid" id="bioCategories"></div>
-    </div>
-  </section>
+<section class="page" id="page-bio">
+  <div class="eyebrow">HUMAN BIOLOGY DATABASE</div><h1>BioVerse</h1>
+  <p>Choose a system or anatomy category to explore its structures and functions.</p>
+  <div class="viewer" id="anatomyViewer"><div class="viewer-inner"><div class="viewer-figure">🧍</div><h3>ANATOMY EXPLORER</h3><p class="viewer-note">Select a category below to view its educational overview.</p></div></div>
+  <div class="anatomy-grid" id="anatomyCategories"></div>
+  <div class="detail" id="anatomyDetail"><h3>Welcome to BioVerse</h3><p>Select a category to see its organs, structures and functions.</p></div>
+</section>
 
-  <section class="section" id="vitals">
-    <div class="panel">
-      <div class="panel-title">❤️ CAP VITALS</div>
-      <p class="panel-desc">Your personal wellness and activity dashboard. Enter or connect supported readings; unsupported sensors will not show fabricated live measurements.</p>
-    </div>
-    <div class="vital-grid" id="vitalGrid"></div>
-    <div class="panel" id="vitalDetail">
-      <div class="panel-title">SELECT A VITAL TOOL</div>
-      <p class="panel-desc">Choose a tracker above to open its controls and information.</p>
-    </div>
-  </section>
+<section class="page" id="page-vitals">
+  <div class="eyebrow">PERSONAL WELLNESS</div><h1>CAP VITALS</h1><p>Track manually entered information. This website does not measure medical readings by itself.</p>
+  <div class="vital-grid" id="vitalGrid"></div>
+  <div class="detail" id="vitalDetail"><h3>Wellness Dashboard</h3><p>Select a tool to enter or review your information.</p></div>
+</section>
 
-  <section class="section" id="ai">
-    <div class="premium-box">
-      <div class="lock-icon">🔒</div>
-      <h2 class="gold">CAP VERSE AI</h2>
-      <div class="gold" style="letter-spacing:5px;font-size:11px;margin-top:10px">PREMIUM ACCESS ONLY</div>
-      <p>Advanced AI features are currently locked. Premium access must be activated by the site administrator. This interface does not pretend to provide AI responses without a connected and authorized AI backend.</p>
-      <div>
-        <span class="premium-feature">AI CHAT</span>
-        <span class="premium-feature">AI CODING</span>
-        <span class="premium-feature">AI ANALYSIS</span>
-        <span class="premium-feature">AI VOICE</span>
-      </div>
-      <br>
-      <button class="action-btn" onclick="showPremiumInfo()">VIEW ACCESS STATUS</button>
-      <p id="premiumStatus" class="note"></p>
-    </div>
-  </section>
+<section class="page" id="page-ai">
+  <div class="eyebrow">INTELLIGENCE ACCESS</div><h1>AI ENGINE</h1>
+  <div class="card"><div class="lock">🔒 PREMIUM ACCESS</div><h2>AI tools are locked</h2><p>AI chat, coding, analysis and voice features require a secure backend and authorized API access.</p><button class="primary" disabled>PREMIUM LOCKED</button></div>
+</section>
 
+<section class="page" id="page-themes">
+  <div class="eyebrow">PERSONALIZATION</div><h1>THEMES</h1><p>Choose your command center appearance.</p>
+  <div class="cards">
+    <div class="card"><h3>JARVIS Blue</h3><button class="card-action" onclick="setTheme('blue')">Activate</button></div>
+    <div class="card"><h3>Emerald Core</h3><button class="card-action" onclick="setTheme('green')">Activate</button></div>
+    <div class="card"><h3>Crimson Mode</h3><button class="card-action" onclick="setTheme('red')">Activate</button></div>
+  </div>
+</section>
+<div class="footer">CAP VERSE • YOUR DIGITAL UNIVERSE</div>
 </main>
 </div>
-
-<script>
-/* =====================================
-   CAP VERSE - MAIN JAVASCRIPT
-===================================== */
-
-function enterVerse(){
-  const intro=document.getElementById("intro");
-  const app=document.getElementById("app");
-  intro.style.transition="opacity 1s ease";
-  intro.style.opacity="0";
-  setTimeout(()=>{
-    intro.classList.add("hidden");
-    app.classList.remove("hidden");
-  },1000);
-}
-
-function showPage(page){
-  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-  document.querySelectorAll(".nav-btn").forEach(b=>b.classList.remove("active"));
-
-  const target=document.getElementById(page);
-  if(!target)return;
-  target.classList.add("active");
-
-  const btn=document.querySelector('[data-page="'+page+'"]');
-  if(btn)btn.classList.add("active");
-
-  const titles={
-    dashboard:"COMMAND CENTER",
-    bioverse:"BIOVERSE • ANATOMY",
-    vitals:"CAP VITALS • WELLNESS",
-    ai:"CAP AI • PREMIUM"
-  };
-  document.getElementById("pageTitle").textContent=titles[page]||"CAP VERSE";
-  document.getElementById("sidebar").classList.remove("open");
-  window.scrollTo({top:0,behavior:"smooth"});
-}
-
-function toggleMenu(){
-  document.getElementById("sidebar").classList.toggle("open");
-}
-
-document.querySelectorAll(".nav-btn").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    showPage(btn.dataset.page);
-  });
-});
-
-/* =====================================
-   BIOVERSE COMPLETE ANATOMY LIBRARY
-===================================== */
-
-const anatomy=[
-{
-name:"Skeletal System",
-group:"Major Body Systems",
-description:"Provides structural support, protects organs, stores minerals and helps movement.",
-organs:[
-"Skull","Cranium","Mandible","Vertebral Column",
-"Cervical Vertebrae","Thoracic Vertebrae","Lumbar Vertebrae",
-"Sacrum","Coccyx","Ribs","Sternum","Clavicle",
-"Scapula","Humerus","Radius","Ulna","Carpals",
-"Metacarpals","Phalanges","Pelvis","Femur","Patella",
-"Tibia","Fibula","Tarsals","Metatarsals"
-]},
-{
-name:"Muscular System",
-group:"Major Body Systems",
-description:"Produces movement, maintains posture and generates body heat.",
-organs:[
-"Masseter","Temporalis","Sternocleidomastoid","Trapezius",
-"Deltoid","Pectoralis Major","Pectoralis Minor",
-"Latissimus Dorsi","Biceps Brachii","Triceps Brachii",
-"Rectus Abdominis","External Oblique","Internal Oblique",
-"Transversus Abdominis","Gluteus Maximus","Gluteus Medius",
-"Quadriceps","Hamstrings","Gastrocnemius","Soleus",
-"Tibialis Anterior","Sartorius","Diaphragm","Intercostal Muscles"
-]},
-{
-name:"Nervous System",
-group:"Major Body Systems",
-description:"Receives information, processes signals and controls body activities.",
-organs:[
-"Brain","Cerebrum","Frontal Lobe","Parietal Lobe",
-"Temporal Lobe","Occipital Lobe","Cerebellum",
-"Brainstem","Midbrain","Pons","Medulla Oblongata",
-"Thalamus","Hypothalamus","Hippocampus","Amygdala",
-"Spinal Cord","Peripheral Nerves","Cranial Nerves",
-"Spinal Nerves","Autonomic Nervous System"
-]},
-{
-name:"Cardiovascular System",
-group:"Major Body Systems",
-description:"Circulates blood, oxygen, nutrients and hormones throughout the body.",
-organs:[
-"Heart","Right Atrium","Left Atrium","Right Ventricle",
-"Left Ventricle","Aorta","Vena Cava","Pulmonary Artery",
-"Pulmonary Veins","Coronary Arteries","Carotid Arteries",
-"Jugular Veins","Arteries","Veins","Capillaries","Blood"
-]},
-{
-name:"Respiratory System",
-group:"Major Body Systems",
-description:"Enables breathing and exchange of oxygen and carbon dioxide.",
-organs:[
-"Nose","Nasal Cavity","Sinuses","Pharynx","Larynx",
-"Epiglottis","Trachea","Bronchi","Bronchioles",
-"Right Lung","Left Lung","Alveoli","Pleura",
-"Diaphragm","Respiratory Muscles"
-]},
-{
-name:"Digestive System",
-group:"Major Body Systems",
-description:"Breaks down food, absorbs nutrients and eliminates solid waste.",
-organs:[
-"Mouth","Teeth","Tongue","Salivary Glands",
-"Pharynx","Esophagus","Stomach","Liver",
-"Gallbladder","Pancreas","Duodenum","Jejunum",
-"Ileum","Small Intestine","Large Intestine",
-"Colon","Cecum","Appendix","Rectum","Anus"
-]},
-{
-name:"Urinary System",
-group:"Major Body Systems",
-description:"Filters blood, regulates fluid balance and produces urine.",
-organs:[
-"Right Kidney","Left Kidney","Renal Cortex","Renal Medulla",
-"Nephrons","Glomerulus","Renal Pelvis","Ureters",
-"Urinary Bladder","Urethra"
-]},
-{
-name:"Endocrine System",
-group:"Major Body Systems",
-description:"Produces hormones that regulate growth, metabolism and reproduction.",
-organs:[
-"Hypothalamus","Pituitary Gland","Pineal Gland",
-"Thyroid Gland","Parathyroid Glands","Thymus",
-"Adrenal Glands","Pancreatic Islets","Ovaries",
-"Testes","Endocrine Cells"
-]},
-{
-name:"Lymphatic System",
-group:"Major Body Systems",
-description:"Returns tissue fluid to the bloodstream and supports immune defense.",
-organs:[
-"Lymph Nodes","Lymph Vessels","Lymphatic Ducts",
-"Thoracic Duct","Right Lymphatic Duct","Spleen",
-"Thymus","Tonsils","Adenoids","Bone Marrow"
-]},
-{
-name:"Immune System",
-group:"Major Body Systems",
-description:"Defends the body against pathogens and abnormal cells.",
-organs:[
-"White Blood Cells","Neutrophils","Lymphocytes",
-"B Cells","T Cells","Natural Killer Cells",
-"Macrophages","Dendritic Cells","Antibodies",
-"Bone Marrow","Spleen","Thymus","Lymph Nodes"
-]},
-{
-name:"Integumentary System",
-group:"Major Body Systems",
-description:"Forms the protective outer covering of the body.",
-organs:[
-"Skin","Epidermis","Dermis","Hypodermis",
-"Hair","Hair Follicles","Nails","Sweat Glands",
-"Sebaceous Glands","Arrector Pili Muscles"
-]},
-{
-name:"Reproductive System",
-group:"Major Body Systems",
-description:"Contains organs involved in human reproduction.",
-organs:[
-"Male: Testes","Male: Epididymis","Male: Vas Deferens",
-"Male: Seminal Vesicles","Male: Prostate","Male: Penis",
-"Male: Scrotum","Female: Ovaries","Female: Fallopian Tubes",
-"Female: Uterus","Female: Cervix","Female: Vagina",
-"Female: Vulva","Mammary Glands"
-]},
-{
-name:"Sensory Organs",
-group:"Additional Anatomy",
-description:"Specialized structures that detect environmental information.",
-organs:[
-"Eyes","Cornea","Iris","Pupil","Lens","Retina",
-"Optic Nerve","Ears","Outer Ear","Middle Ear",
-"Inner Ear","Cochlea","Semicircular Canals",
-"Nose","Olfactory Epithelium","Tongue","Taste Buds"
-]},
-{
-name:"Joints & Ligaments",
-group:"Additional Anatomy",
-description:"Connect bones and stabilize the skeleton.",
-organs:[
-"Shoulder Joint","Elbow Joint","Wrist Joint",
-"Hip Joint","Knee Joint","Ankle Joint",
-"Temporomandibular Joint","Synovial Membrane",
-"Articular Cartilage","Anterior Cruciate Ligament",
-"Posterior Cruciate Ligament","Meniscus"
-]},
-{
-name:"Tendons & Connective Tissues",
-group:"Additional Anatomy",
-description:"Connect structures and provide support and mechanical strength.",
-organs:[
-"Achilles Tendon","Patellar Tendon","Rotator Cuff Tendons",
-"Flexor Tendons","Extensor Tendons","Collagen Fibers",
-"Elastic Fibers","Adipose Tissue","Cartilage",
-"Bone Tissue","Dense Connective Tissue"
-]},
-{
-name:"Fascia System",
-group:"Additional Anatomy",
-description:"Connective tissue layers surrounding muscles and organs.",
-organs:[
-"Superficial Fascia","Deep Fascia","Visceral Fascia",
-"Thoracolumbar Fascia","Plantar Fascia","Endomysium",
-"Perimysium","Epimysium"
-]},
-{
-name:"Blood & Blood Components",
-group:"Additional Anatomy",
-description:"Blood transports gases, nutrients, hormones and immune cells.",
-organs:[
-"Plasma","Red Blood Cells","White Blood Cells",
-"Platelets","Hemoglobin","Neutrophils",
-"Eosinophils","Basophils","Monocytes","Lymphocytes"
-]},
-{
-name:"Oral & Dental Anatomy",
-group:"Additional Anatomy",
-description:"Structures involved in chewing, speech and oral health.",
-organs:[
-"Incisors","Canines","Premolars","Molars",
-"Enamel","Dentin","Dental Pulp","Gingiva",
-"Periodontal Ligament","Hard Palate","Soft Palate",
-"Salivary Ducts"
-]},
-{
-name:"Head & Neck Anatomy",
-group:"Additional Anatomy",
-description:"Structures supporting the brain, senses, airway and swallowing.",
-organs:[
-"Scalp","Facial Muscles","Jaw","Hyoid Bone",
-"Pharynx","Larynx","Thyroid Cartilage",
-"Carotid Artery","Jugular Vein","Cervical Lymph Nodes",
-"Salivary Glands"
-]},
-{
-name:"Brain Regions",
-group:"Additional Anatomy",
-description:"Detailed regions responsible for cognition, movement and regulation.",
-organs:[
-"Prefrontal Cortex","Motor Cortex","Sensory Cortex",
-"Visual Cortex","Auditory Cortex","Corpus Callosum",
-"Basal Ganglia","Cerebral Cortex","Pons",
-"Medulla","Cerebellar Cortex","Hypothalamus",
-"Hippocampus","Amygdala","Thalamus"
-]},
-{
-name:"Spinal Anatomy",
-group:"Additional Anatomy",
-description:"Structures protecting and supporting the spinal cord.",
-organs:[
-"Cervical Spine","Thoracic Spine","Lumbar Spine",
-"Sacrum","Coccyx","Spinal Nerves",
-"Spinal Meninges","Dura Mater","Arachnoid Mater",
-"Pia Mater","Intervertebral Discs"
-]},
-{
-name:"Cellular Biology",
-group:"Biology & Development",
-description:"Explores the structures and functions of human cells.",
-organs:[
-"Cell Membrane","Cytoplasm","Nucleus","Nucleolus",
-"Mitochondria","Ribosomes","Endoplasmic Reticulum",
-"Golgi Apparatus","Lysosomes","Peroxisomes",
-"Cytoskeleton","Centrosome"
-]},
-{
-name:"Tissue Biology",
-group:"Biology & Development",
-description:"Studies the four basic tissue types and their specialized structures.",
-organs:[
-"Epithelial Tissue","Connective Tissue","Muscle Tissue",
-"Nervous Tissue","Simple Squamous Epithelium",
-"Stratified Epithelium","Adipose Tissue",
-"Cartilage","Bone Tissue","Blood Tissue"
-]},
-{
-name:"Human Genetics",
-group:"Biology & Development",
-description:"Explores DNA, chromosomes, genes and inheritance.",
-organs:[
-"DNA","Genes","Chromosomes","Autosomes",
-"Sex Chromosomes","Mitochondrial DNA",
-"Alleles","Genome","RNA","Chromatin"
-]},
-{
-name:"Embryology & Development",
-group:"Biology & Development",
-description:"Studies human development from fertilization through fetal growth.",
-organs:[
-"Zygote","Morula","Blastocyst","Embryo",
-"Germ Layers","Ectoderm","Mesoderm","Endoderm",
-"Neural Tube","Placenta","Umbilical Cord","Fetal Development"
-]}
-];
-
-function renderBio(){
-  const container=document.getElementById("bioCategories");
-  if(!container)return;
-  container.innerHTML="";
-  anatomy.forEach((item,index)=>{
-    const button=document.createElement("button");
-    button.className="chip";
-    button.innerHTML="<strong>"+item.name+"</strong><small>"+item.group+" • "+item.organs.length+" structures</small>";
-    button.addEventListener("click",()=>selectAnatomy(index));
-    container.appendChild(button);
-  });
-}
-
-function selectAnatomy(index){
-  const item=anatomy[index];
-  document.getElementById("bioSelectedTitle").textContent=item.name;
-  document.getElementById("bioSelectedDesc").textContent=item.description;
-
-  const details=document.getElementById("bioDetails");
-  details.innerHTML="";
-  const heading=document.createElement("p");
-  heading.className="note";
-  heading.textContent="ANATOMICAL STRUCTURES";
-  details.appendChild(heading);
-
-  item.organs.forEach(organ=>{
-    const row=document.createElement("div");
-    row.style.cssText="padding:10px 4px;border-bottom:1px solid rgba(112,190,255,.12);font-size:12px;color:#c9eaff";
-    row.textContent="◈  "+organ;
-    details.appendChild(row);
-  });
-
-  document.querySelectorAll("#bioCategories .chip").forEach((b,i)=>{
-    b.classList.toggle("selected",i===index);
-  });
-}
-
-document.getElementById("bioSearch").addEventListener("input",function(){
-  const q=this.value.toLowerCase().trim();
-  document.querySelectorAll("#bioCategories .chip").forEach((button,index)=>{
-    const item=anatomy[index];
-    const text=(item.name+" "+item.group+" "+item.description+" "+item.organs.join(" ")).toLowerCase();
-    button.style.display=text.includes(q)?"block":"none";
-  });
-});
-
-renderBio();
-selectAnatomy(0);
-
-/* =====================================
-   CAP VITALS - 12 TRACKING TOOLS
-===================================== */
-
-const vitalTools=[
-{name:"Step Counter",icon:"👣",desc:"Track your daily walking steps.",type:"steps"},
-{name:"Heart Rate",icon:"❤️",desc:"Enter a heart rate reading in BPM.",type:"heart"},
-{name:"Calories Burned",icon:"🔥",desc:"Record estimated activity calories.",type:"calories"},
-{name:"Walking Tracker",icon:"🏃",desc:"Record your walking sessions.",type:"walking"},
-{name:"Distance Tracker",icon:"📏",desc:"Track distance travelled in kilometres.",type:"distance"},
-{name:"Sleep Tracker",icon:"💤",desc:"Record your sleep duration.",type:"sleep"},
-{name:"Breathing Tracker",icon:"🫁",desc:"Practice a guided breathing exercise.",type:"breathing"},
-{name:"SpO₂ Monitor",icon:"🩸",desc:"Record an oxygen saturation reading.",type:"spo2"},
-{name:"Water Tracker",icon:"💧",desc:"Track daily water consumption.",type:"water"},
-{name:"BMI Tracker",icon:"⚖️",desc:"Calculate BMI from height and weight.",type:"bmi"},
-{name:"Fitness Goals",icon:"🎯",desc:"Set a daily activity goal.",type:"goals"},
-{name:"Health Dashboard",icon:"📊",desc:"Review your recorded activity data.",type:"dashboard"}
-];
-
-const vitalData={
-steps:0,calories:0,distance:0,water:0,sleep:0,walks:0,
-heart:null,spo2:null,goal:8000
-};
-
-const vitalGrid=document.getElementById("vitalGrid");
-
-vitalTools.forEach(tool=>{
-  const card=document.createElement("div");
-  card.className="vital-card";
-  card.innerHTML=`
-    <div class="emoji">${tool.icon}</div>
-    <h3>${tool.name}</h3>
-    <p>${tool.desc}</p>
-    <button type="button">OPEN TRACKER →</button>`;
-  card.querySelector("button").addEventListener("click",()=>openVital(tool.type));
-  vitalGrid.appendChild(card);
-});
-
-function openVital(type){
-  const panel=document.getElementById("vitalDetail");
-  let html="";
-  const title=vitalTools.find(t=>t.type===type).name;
-
-  if(type==="steps"){
-    html=`<h3>👣 STEP COUNTER</h3>
-    <div class="vital-value">${vitalData.steps} steps</div>
-    <input class="field" id="stepInput" type="number" min="1" placeholder="Enter additional steps">
-    <button class="action-btn" onclick="addVital('steps','stepInput')">ADD STEPS</button>
-    <p class="note">Manual entry only unless a compatible step sensor or health integration is connected.</p>`;
-  }
-  else if(type==="heart"||type==="spo2"){
-    const isHeart=type==="heart";
-    html=`<h3>${isHeart?"❤️ HEART RATE":"🩸 BLOOD OXYGEN"}</h3>
-    <div class="vital-value">${isHeart?(vitalData.heart??"No reading")+" BPM":(vitalData.spo2??"No reading")+"%"}</div>
-    <input class="field" id="readingInput" type="number" min="1" max="${isHeart?250:100}" placeholder="${isHeart?"Enter measured BPM":"Enter measured SpO₂ %"}">
-    <button class="action-btn" onclick="saveReading('${type}')">SAVE READING</button>
-    <p class="note">Requires a compatible medical device or sensor for actual measurement. This tool only records readings you provide.</p>`;
-  }
-  else if(type==="calories"){
-    html=`<h3>🔥 CALORIES BURNED</h3>
-    <div class="vital-value">${vitalData.calories} kcal</div>
-    <input class="field" id="calorieInput" type="number" min="1" placeholder="Enter estimated calories">
-    <button class="action-btn" onclick="addVital('calories','calorieInput')">SAVE CALORIES</button>`;
-  }
-  else if(type==="walking"){
-    html=`<h3>🏃 WALKING TRACKER</h3>
-    <div class="vital-value">${vitalData.walks} sessions</div>
-    <input class="field" id="walkInput" type="number" min="1" placeholder="Walking duration in minutes">
-    <button class="action-btn" onclick="recordWalk()">SAVE WALKING SESSION</button>`;
-  }
-  else if(type==="distance"){
-    html=`<h3>📏 DISTANCE TRACKER</h3>
-    <div class="vital-value">${vitalData.distance.toFixed(2)} km</div>
-    <input class="field" id="distanceInput" type="number" min="0.01" step="0.01" placeholder="Distance in kilometres">
-    <button class="action-btn" onclick="addVital('distance','distanceInput')">ADD DISTANCE</button>`;
-  }
-  else if(type==="sleep"){
-    html=`<h3>💤 SLEEP TRACKER</h3>
-    <div class="vital-value">${vitalData.sleep} hours</div>
-    <input class="field" id="sleepInput" type="number" min="0.1" max="24" step="0.1" placeholder="Hours slept">
-    <button class="action-btn" onclick="addVital('sleep','sleepInput')">SAVE SLEEP</button>`;
-  }
-  else if(type==="breathing"){
-    html=`<h3>🫁 BREATHING EXERCISE</h3>
-    <div class="vital-value" id="breathText">READY</div>
-    <div style="width:100px;height:100px;border:2px solid #20c9ff;border-radius:50%;margin:20px auto;display:flex;align-items:center;justify-content:center;box-shadow:0 0 25px #087eae" id="breathCircle">BREATHE</div>
-    <button class="action-btn" onclick="startBreathing()">START EXERCISE</button>
-    <p class="note">Gentle guided breathing. Stop if you feel dizzy or uncomfortable.</p>`;
-  }
-  else if(type==="water"){
-    html=`<h3>💧 WATER TRACKER</h3>
-    <div class="vital-value">${vitalData.water} ml</div>
-    <input class="field" id="waterInput" type="number" min="1" placeholder="Water consumed in ml">
-    <button class="action-btn" onclick="addVital('water','waterInput')">ADD WATER</button>`;
-  }
-  else if(type==="bmi"){
-    html=`<h3>⚖️ BMI CALCULATOR</h3>
-    <input class="field" id="bmiHeight" type="number" min="50" max="250" placeholder="Height in cm">
-    <input class="field" id="bmiWeight" type="number" min="10" max="500" placeholder="Weight in kg">
-    <button class="action-btn" onclick="calculateBMI()">CALCULATE BMI</button>
-    <div class="vital-value" id="bmiResult">--</div>
-    <p class="note">BMI is a screening measure, not a diagnosis.</p>`;
-  }
-  else if(type==="goals"){
-    html=`<h3>🎯 DAILY FITNESS GOAL</h3>
-    <div class="vital-value">${vitalData.steps} / ${vitalData.goal}</div>
-    <input class="field" id="goalInput" type="number" min="1" placeholder="Set daily step goal">
-    <button class="action-btn" onclick="setGoal()">UPDATE GOAL</button>
-    <p class="note">Progress: ${Math.min(100,Math.round(vitalData.steps/vitalData.goal*100))}%</p>`;
-  }
-  else if(type==="dashboard"){
-    html=`<h3>📊 HEALTH DASHBOARD</h3>
-    <div class="vital-grid">
-      <div class="vital-card"><h3>Steps</h3><div class="vital-value">${vitalData.steps}</div></div>
-      <div class="vital-card"><h3>Calories</h3><div class="vital-value">${vitalData.calories}</div></div>
-      <div class="vital-card"><h3>Distance</h3><div class="vital-value">${vitalData.distance.toFixed(2)}</div></div>
-      <div class="vital-card"><h3>Water</h3><div class="vital-value">${vitalData.water}</div></div>
-      <div class="vital-card"><h3>Sleep</h3><div class="vital-value">${vitalData.sleep}</div></div>
-      <div class="vital-card"><h3>Walks</h3><div class="vital-value">${vitalData.walks}</div></div>
-    </div>
-    <p class="note">Only user-recorded values are displayed. These are not medical measurements.</p>`;
-  }
-
-  panel.innerHTML=`<div class="panel-title">${title}</div><div style="margin-top:18px">${html}</div>`;
-}
-
-function addVital(key,id){
-  const el=document.getElementById(id);
-  const value=Number(el.value);
-  if(!Number.isFinite(value)||value<=0){
-    alert("Please enter a valid positive number.");
-    return;
-  }
-  vitalData[key]=Number((vitalData[key]+value).toFixed(2));
-  openVital(key);
-}
-
-function saveReading(type){
-  const value=Number(document.getElementById("readingInput").value);
-  const isHeart=type==="heart";
-  if(!Number.isFinite(value)||value<=0||value>(isHeart?250:100)){
-    alert("Enter a valid measured reading.");
-    return;
-  }
-  vitalData[isHeart?"heart":"spo2"]=value;
-  openVital(type);
-}
-
-function recordWalk(){
-  const value=Number(document.getElementById("walkInput").value);
-  if(!Number.isFinite(value)||value<=0||value>1440){
-    alert("Enter a valid walking duration in minutes.");
-    return;
-  }
-  vitalData.walks++;
-  openVital("walking");
-}
-
-function calculateBMI(){
-  const h=Number(document.getElementById("bmiHeight").value);
-  const w=Number(document.getElementById("bmiWeight").value);
-  if(!Number.isFinite(h)||!Number.isFinite(w)||h<50||h>250||w<10||w>500){
-    alert("Enter valid height and weight.");
-    return;
-  }
-  const bmi=w/((h/100)**2);
-  let category="Obesity range";
-  if(bmi<18.5)category="Underweight range";
-  else if(bmi<25)category="Healthy weight range";
-  else if(bmi<30)category="Overweight range";
-  document.getElementById("bmiResult").textContent=bmi.toFixed(1)+" • "+category;
-}
-
-function setGoal(){
-  const value=Number(document.getElementById("goalInput").value);
-  if(!Number.isInteger(value)||value<=0){
-    alert("Enter a valid whole-number goal.");
-    return;
-  }
-  vitalData.goal=value;
-  openVital("goals");
-}
-
-let breathingInterval=null;
-function startBreathing(){
-  if(breathingInterval)clearInterval(breathingInterval);
-  const text=document.getElementById("breathText");
-  const circle=document.getElementById("breathCircle");
-  const stages=["BREATHE IN","BREATHE OUT"];
-  let stage=0;
-  let seconds=4;
-  function tick(){
-    text.textContent=stages[stage]+" • "+seconds;
-    circle.style.transform=stage===0?"scale(1.3)":"scale(.85)";
-    seconds--;
-    if(seconds<0){
-      stage=1-stage;
-      seconds=4;
-    }
-  }
-  tick();
-  breathingInterval=setInterval(tick,1000);
-  setTimeout(()=>{
-    clearInterval(breathingInterval);
-    breathingInterval=null;
-    if(document.getElementById("breathText")){
-      text.textContent="SESSION COMPLETE";
-      circle.style.transform="scale(1)";
-    }
-  },60000);
-}
-
-function showPremiumInfo(){
-  document.getElementById("premiumStatus").textContent=
-    "ACCESS LOCKED • Administrator authorization and secure backend verification required.";
-}
-
-</script>
+</div>
 </body>
 </html>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = id => document.getElementById(id);
+
+  const save = (key, value) => {
+    try { localStorage.setItem(key, JSON.stringify(value)); }
+    catch (e) { console.warn("Storage unavailable", e); }
+  };
+
+  const read = (key, fallback) => {
+    try {
+      const value = JSON.parse(localStorage.getItem(key));
+      return value ?? fallback;
+    } catch (e) { return fallback; }
+  };
+
+  /* NAVIGATION */
+
+  const pages = [
+    "dashboard", "socialverse", "bioverse", "capvitals",
+    "ai", "themes", "tools", "settings"
+  ];
+
+  window.showPage = function (page) {
+    const target = String(page || "").toLowerCase().replace(/[^a-z]/g, "");
+    let found = false;
+
+    pages.forEach(name => {
+      const section = $(name);
+      if (section) {
+        section.style.display = name === target ? "block" : "none";
+        if (name === target) found = true;
+      }
+    });
+
+    document.querySelectorAll("[data-page]").forEach(button => {
+      button.classList.toggle("active", button.dataset.page === target);
+    });
+
+    if (target === "bioverse") {
+      setTimeout(initAnatomyViewer, 150);
+    }
+
+    if (!found) console.warn("Page section not found:", target);
+  };
+
+  window.enterVerse = function (page = "dashboard") {
+    const intro = $("introScreen") || $("intro") ||
+      document.querySelector(".intro-screen");
+    if (intro) intro.style.display = "none";
+    window.showPage(page);
+  };
+
+  window.initializeSystem = function () {
+    window.enterVerse("dashboard");
+  };
+
+  document.addEventListener("click", event => {
+    const nav = event.target.closest("[data-page]");
+    if (nav) {
+      event.preventDefault();
+      window.showPage(nav.dataset.page);
+    }
+  });
+
+  /* THEMES */
+
+  const themes = {
+    blue: ["#07111f", "#00c8ff", "#102b46"],
+    green: ["#071710", "#00e6a0", "#103b2d"],
+    red: ["#19090d", "#ff466c", "#421522"],
+    purple: ["#120b20", "#b58aff", "#30204b"],
+    gold: ["#171208", "#ffc857", "#453315"]
+  };
+
+  window.setTheme = function (name) {
+    const selected = themes[name] || themes.blue;
+    document.documentElement.style.setProperty("--bg", selected[0]);
+    document.documentElement.style.setProperty("--accent", selected[1]);
+    document.documentElement.style.setProperty("--panel", selected[2]);
+    document.body.style.backgroundColor = selected[0];
+    save("capverse_theme", name in themes ? name : "blue");
+  };
+
+  window.setTheme(read("capverse_theme", "blue"));
+
+  /* SOCIALVERSE */
+
+  const platforms = {
+    "Instagram": "https://www.instagram.com/",
+    "TikTok": "https://www.tiktok.com/@",
+    "Reddit": "https://www.reddit.com/user/",
+    "GitHub": "https://github.com/",
+    "Netlify": null,
+    "YouTube": "https://www.youtube.com/@",
+    "Facebook": "https://www.facebook.com/",
+    "X (Twitter)": "https://x.com/",
+    "LinkedIn": "https://www.linkedin.com/in/",
+    "Pinterest": "https://www.pinterest.com/",
+    "Snapchat": "https://www.snapchat.com/add/",
+    "Telegram": "https://t.me/",
+    "Discord": null,
+    "Twitch": "https://www.twitch.tv/",
+    "Threads": "https://www.threads.net/@",
+    "Medium": "https://medium.com/@",
+    "Behance": "https://www.behance.net/",
+    "Dribbble": "https://dribbble.com/",
+    "CodePen": "https://codepen.io/",
+    "Replit": "https://replit.com/@",
+    "Stack Overflow": null,
+    "Dev.to": "https://dev.to/",
+    "Product Hunt": "https://www.producthunt.com/@",
+    "Kaggle": "https://www.kaggle.com/",
+    "Hugging Face": "https://huggingface.co/",
+    "Figma": null,
+    "Buy Me a Coffee": "https://buymeacoffee.com/",
+    "Ko-fi": "https://ko-fi.com/",
+    "Patreon": "https://www.patreon.com/",
+    "SoundCloud": "https://soundcloud.com/",
+    "Spotify": "https://open.spotify.com/user/",
+    "Apple Music": null,
+    "WhatsApp": null,
+    "Google Play": null,
+    "WordPress": "https://wordpress.com/",
+    "Blogger": "https://www.blogger.com/",
+    "Tumblr": "https://www.tumblr.com/",
+    "Vimeo": "https://vimeo.com/",
+    "Kick": "https://kick.com/",
+    "Linktree": "https://linktr.ee/",
+    "MyLinks Hub": "https://mylinkshub-pk.netlify.app/?profile=",
+    "Nexora": "https://captain0031-cloud.github.io/Nexora/",
+    "Cap Verse": "https://cap-verse.netlify.app/"
+  };
+
+  const platformSelect = $("socialPlatform");
+  const socialInput = $("socialUsername");
+  const socialList = $("socialList");
+  const socialSearch = $("socialSearch");
+  const socialEmpty = $("socialEmpty");
+
+  if (platformSelect) {
+    platformSelect.innerHTML = '<option value="">Select platform</option>';
+    Object.keys(platforms).sort().forEach(name => {
+      const option = document.createElement("option");
+      option.value = name;
+      option.textContent = name;
+      platformSelect.appendChild(option);
+    });
+  }
+
+  let socialItems = read("capverse_social_links", []);
+
+  function makeSocialURL(platform, value) {
+    const raw = String(value || "").trim();
+    if (!raw) return null;
+
+    if (/^https?:\/\//i.test(raw)) {
+      try {
+        const url = new URL(raw);
+        return ["http:", "https:"].includes(url.protocol) ? url.href : null;
+      } catch (e) { return null; }
+    }
+
+    if (raw.includes("://") || /\s/.test(raw)) return null;
+
+    const base = platforms[platform];
+    if (!base) return null;
+
+    const clean = raw.replace(/^@/, "").replace(/^\/+|\/+$/g, "");
+    if (!clean) return null;
+
+    return base + encodeURIComponent(clean);
+  }
+
+  function renderSocials() {
+    if (!socialList) return;
+
+    socialList.innerHTML = "";
+    const term = (socialSearch?.value || "").toLowerCase().trim();
+
+    const filtered = socialItems.filter(item =>
+      (item.platform + " " + item.username + " " + item.url)
+        .toLowerCase().includes(term)
+    );
+
+    if (socialEmpty) socialEmpty.style.display = filtered.length ? "none" : "block";
+
+    filtered.forEach(item => {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "display:flex;justify-content:space-between;align-items:center;" +
+        "gap:12px;padding:12px;margin:10px 0;border:1px solid rgba(0,200,255,.25);" +
+        "border-radius:12px;background:rgba(10,30,50,.55);";
+
+      const info = document.createElement("div");
+      const title = document.createElement("strong");
+      title.textContent = item.platform;
+
+      const user = document.createElement("p");
+      user.textContent = item.username;
+      user.style.cssText = "font-size:12px;overflow-wrap:anywhere;";
+
+      const link = document.createElement("a");
+      link.href = item.url;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = "Open Profile";
+
+      info.append(title, user, link);
+
+      const remove = document.createElement("button");
+      remove.type = "button";
+      remove.textContent = "Delete";
+      remove.addEventListener("click", () => {
+        socialItems = socialItems.filter(x => x.id !== item.id);
+        save("capverse_social_links", socialItems);
+        renderSocials();
+      });
+
+      card.append(info, remove);
+      socialList.appendChild(card);
+    });
+  }
+
+  $("addSocial")?.addEventListener("click", () => {
+    const platform = platformSelect?.value;
+    const username = socialInput?.value.trim();
+
+    if (!platform || !username) {
+      alert("Platform aur username/profile URL enter karo.");
+      return;
+    }
+
+    const url = makeSocialURL(platform, username);
+    if (!url) {
+      alert("Is platform ke liye full profile URL enter karo.");
+      return;
+    }
+
+    socialItems.push({
+      id: Date.now().toString() + Math.random().toString(16).slice(2),
+      platform,
+      username,
+      url
+    });
+
+    save("capverse_social_links", socialItems);
+    socialInput.value = "";
+    platformSelect.value = "";
+    renderSocials();
+  });
+
+  socialSearch?.addEventListener("input", renderSocials);
+  renderSocials();
+
+  /* CAP VITALS */
+
+  const vitalTools = [
+    ["Step Counter", "steps", "number", "Steps today"],
+    ["Heart Rate", "heart", "number", "Heart rate (BPM)"],
+    ["Calories Burned", "calories", "number", "Calories burned"],
+    ["Walking Tracker", "walking", "text", "Walking activity notes"],
+    ["Distance Tracker", "distance", "number", "Distance in kilometres"],
+    ["Sleep Tracker", "sleep", "number", "Sleep hours"],
+    ["Breathing Tracker", "breathing", "number", "Breaths per minute"],
+    ["SpO₂ Monitor", "spo2", "number", "SpO2 percentage"],
+    ["Water Tracker", "water", "number", "Water glasses"],
+    ["BMI Tracker", "bmi", "text", "Weight kg, height cm"],
+    ["Fitness Goals", "goals", "text", "Your fitness goal"],
+    ["Health Dashboard", "health", "text", "Daily health notes"]
+  ];
+
+  let vitalData = read("capverse_vitals", {});
+
+  function renderVitals() {
+    const grid = $("vitalGrid");
+    if (!grid) return;
+
+    grid.innerHTML = "";
+
+    vitalTools.forEach(([name, key, type, label]) => {
+      const card = document.createElement("div");
+      card.style.cssText =
+        "padding:15px;margin:10px 0;border:1px solid rgba(0,200,255,.22);" +
+        "border-radius:14px;background:rgba(10,30,50,.5);";
+
+      const heading = document.createElement("h3");
+      heading.textContent = name;
+
+      const caption = document.createElement("label");
+      caption.textContent = label;
+      caption.style.display = "block";
+
+      const input = document.createElement("input");
+      input.type = type;
+      input.value = vitalData[key] ?? "";
+      input.placeholder = label;
+      input.style.cssText =
+        "box-sizing:border-box;width:100%;padding:11px;margin:8px 0;" +
+        "border-radius:9px;background:#0b1725;color:white;";
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = "Save";
+
+      const result = document.createElement("p");
+      result.textContent = vitalData[key] ? "Saved: " + vitalData[key] : "No entry saved.";
+
+      button.addEventListener("click", () => {
+        const value = input.value.trim();
+        if (!value) return alert("Value enter karo.");
+        vitalData[key] = value;
+        save("capverse_vitals", vitalData);
+        result.textContent = "Saved: " + value;
+      });
+
+      card.append(heading, caption, input, button, result);
+      grid.appendChild(card);
+    });
+
+    const detail = $("vitalDetail");
+    if (detail) {
+      detail.textContent =
+        "Entries are saved on this device. Heart rate and SpO2 are manual entries, not live sensor readings.";
+    }
+  }
+
+  renderVitals();
+
+  /* BIOVERSE SYSTEMS */
+
+  const anatomySystems = [
+    ["Skeletal System", "Bones support the body and protect organs."],
+    ["Muscular System", "Muscles create movement and maintain posture."],
+    ["Nervous System", "Brain, spinal cord and nerves coordinate body activity."],
+    ["Circulatory System", "Heart and blood vessels transport blood."],
+    ["Respiratory System", "Lungs and airways support gas exchange."],
+    ["Digestive System", "Organs digest food and absorb nutrients."],
+    ["Urinary System", "Kidneys and urinary tract remove waste."],
+    ["Endocrine System", "Glands release hormones."],
+    ["Lymphatic System", "Lymph vessels help fluid balance and immune defence."],
+    ["Immune System", "Cells and organs defend against pathogens."],
+    ["Integumentary System", "Skin, hair and nails protect the body."],
+    ["Reproductive System", "Organs support human reproduction."]
+  ];
+
+  const additionalAnatomy = [
+    ["Brain", "Control centre of the nervous system."],
+    ["Heart", "Muscular organ that pumps blood."],
+    ["Lungs", "Organs where gas exchange occurs."],
+    ["Liver", "Processes nutrients and many substances."],
+    ["Stomach", "Helps digest food."],
+    ["Kidneys", "Filter blood and produce urine."],
+    ["Spine", "Supports the body and protects the spinal cord."],
+    ["Eyes", "Organs responsible for vision."],
+    ["Skin", "The body's outer protective barrier."]
+  ];
+
+  const anatomyItems = [...anatomySystems, ...additionalAnatomy];
+  let selectedAnatomy = "Skeletal System";
+
+  function renderAnatomyCategories() {
+    const holder = $("anatomyCategories");
+    if (!holder) return;
+
+    holder.innerHTML = "";
+
+    anatomyItems.forEach(([name]) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = name;
+      button.style.cssText = "margin:5px;padding:9px 12px;border-radius:20px;";
+
+      button.addEventListener("click", () => {
+        selectedAnatomy = name;
+        renderAnatomyDetail();
+        holder.querySelectorAll("button").forEach(btn => {
+          const active = btn.textContent === name;
+          btn.style.background = active ? "var(--accent,#00c8ff)" : "";
+          btn.style.color = active ? "#07111f" : "";
+        });
+      });
+
+      holder.appendChild(button);
+    });
+  }
+
+  function renderAnatomyDetail() {
+    const detail = $("anatomyDetail");
+    if (!detail) return;
+
+    const item = anatomyItems.find(x => x[0] === selectedAnatomy);
+    if (!item) return;
+
+    detail.innerHTML = "";
+    const heading = document.createElement("h3");
+    heading.textContent = item[0];
+
+    const description = document.createElement("p");
+    description.textContent = item[1];
+
+    detail.append(heading, description);
+  }
+
+  renderAnatomyCategories();
+  renderAnatomyDetail();
+
+  /* THREE.JS MODEL LOADER */
+
+  let anatomyViewerStarted = false;
+
+  async function initAnatomyViewer() {
+    const viewer = $("anatomyViewer");
+    if (!viewer || anatomyViewerStarted) return;
+
+    anatomyViewerStarted = true;
+    viewer.innerHTML = "";
+
+    const status = document.createElement("p");
+    status.textContent = "3D viewer ready. Add a direct GLB/GLTF model URL.";
+    
+    const urlInput = document.createElement("input");
+    urlInput.type = "url";
+    urlInput.placeholder = "Paste direct .glb or .gltf model URL";
+    urlInput.style.cssText =
+      "box-sizing:border-box;width:100%;padding:10px;margin:8px 0;" +
+      "border-radius:8px;background:#0b1725;color:white;";
+
+    const loadButton = document.createElement("button");
+    loadButton.type = "button";
+    loadButton.textContent = "Load 3D Anatomy Model";
+
+    const canvasWrap = document.createElement("div");
+    canvasWrap.style.cssText =
+      "width:100%;height:380px;overflow:hidden;border-radius:14px;background:#07111f;";
+
+    viewer.append(status, urlInput, loadButton, canvasWrap);
+
+    loadButton.addEventListener("click", async () => {
+      const modelURL = urlInput.value.trim();
+
+      if (!/^https?:\/\//i.test(modelURL) ||
+          !/\.(glb|gltf)(\?.*)?$/i.test(modelURL)) {
+        status.textContent = "Enter a direct GLB or GLTF file URL.";
+        return;
+      }
+
+      status.textContent = "Loading 3D model...";
+
+      try {
+        const THREE = await import(
+          "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+        );
+        const { OrbitControls } = await import(
+          "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js"
+        );
+        const { GLTFLoader } = await import(
+          "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js"
+        );
+
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x07111f);
+
+        const camera = new THREE.PerspectiveCamera(
+          45,
+          canvasWrap.clientWidth / canvasWrap.clientHeight,
+          0.1,
+          1000
+        );
+        camera.position.set(0, 1.5, 5);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+        renderer.setSize(canvasWrap.clientWidth, canvasWrap.clientHeight);
+        canvasWrap.innerHTML = "";
+        canvasWrap.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.minDistance = 1;
+        controls.maxDistance = 20;
+
+        scene.add(new THREE.HemisphereLight(0xffffff, 0x334466, 2));
+
+        const light = new THREE.DirectionalLight(0xffffff, 2);
+        light.position.set(4, 6, 5);
+        scene.add(light);
+
+        const loader = new GLTFLoader();
+
+        loader.load(modelURL, gltf => {
+          const model = gltf.scene;
+          scene.add(model);
+
+          const bounds = new THREE.Box3().setFromObject(model);
+          const center = bounds.getCenter(new THREE.Vector3());
+          const size = bounds.getSize(new THREE.Vector3());
+          model.position.sub(center);
+
+          const maxSize = Math.max(size.x, size.y, size.z);
+          camera.position.set(0, maxSize * 0.2, Math.max(2.5, maxSize * 2.2));
+          controls.target.set(0, 0, 0);
+          controls.update();
+
+          status.textContent =
+            "3D model loaded. Drag to rotate and scroll/pinch to zoom.";
+        }, undefined, error => {
+          console.error(error);
+          status.textContent =
+            "Model load failed. Check URL, file format and CORS permissions.";
+        });
+
+        function animate() {
+          requestAnimationFrame(animate);
+          controls.update();
+          renderer.render(scene, camera);
+        }
+        animate();
+
+        window.addEventListener("resize", () => {
+          const width = canvasWrap.clientWidth;
+          const height = canvasWrap.clientHeight;
+          if (!width || !height) return;
+          camera.aspect = width / height;
+          camera.updateProjectionMatrix();
+          renderer.setSize(width, height);
+        });
+
+      } catch (error) {
+        console.error(error);
+        status.textContent =
+          "3D viewer could not start. Check internet and WebGL support.";
+      }
+    });
+  }
+
+  window.initAnatomyViewer = initAnatomyViewer;
+
+  /* INITIAL SETUP */
+
+  const intro = $("introScreen") || $("intro") ||
+    document.querySelector(".intro-screen");
+
+  if (!intro) window.showPage("dashboard");
+
+  console.log("CAP VERSE initialized.");
+})();
+</script>
