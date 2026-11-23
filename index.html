@@ -1,0 +1,575 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#050b14">
+<title>CAP VERSE | Digital Universe</title>
+
+<style>
+:root {
+  --blue: #39c9ff;
+  --cyan: #83e5ff;
+  --bg: #050b14;
+  --panel: rgba(9, 25, 42, .88);
+  --line: rgba(57, 201, 255, .24);
+  --muted: #7899b2;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: #eaf7ff;
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+button { font: inherit; cursor: pointer; }
+#intro, #app { min-height: 100vh; }
+#intro {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 25px;
+  background:
+    radial-gradient(ellipse at center, #102b43 0%, #071522 42%, #030810 100%);
+  transition: opacity 1s, visibility 1s;
+}
+#intro.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.scanlines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .15;
+  background: repeating-linear-gradient(
+    to bottom, transparent 0px, transparent 3px,
+    rgba(70,190,255,.12) 4px
+  );
+}
+.intro-grid {
+  position: absolute;
+  inset: 0;
+  opacity: .2;
+  background-image:
+    linear-gradient(rgba(55,190,255,.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(55,190,255,.12) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse, black, transparent 75%);
+}
+.core {
+  width: 190px;
+  height: 190px;
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-bottom: 32px;
+}
+.ring {
+  position: absolute;
+  border: 1px solid rgba(68,204,255,.6);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(40,170,255,.12);
+}
+.ring.one { inset: 0; border-top: 2px solid var(--cyan); animation: spin 7s linear infinite; }
+.ring.two { inset: 15px; border-bottom: 2px solid var(--blue); animation: spin 5s linear infinite reverse; }
+.ring.three { inset: 31px; border-left: 2px solid #b3f1ff; animation: spin 9s linear infinite; }
+.core-center {
+  width: 65px; height: 65px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #d9faff 0%, #3dcaff 22%, #075078 65%, #031322 100%);
+  box-shadow: 0 0 24px #28bfff, 0 0 65px rgba(40,180,255,.45);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 50% { transform: scale(1.12); opacity: .8; } }
+.eyebrow {
+  color: var(--cyan);
+  letter-spacing: 4px;
+  font-size: 10px;
+  margin-bottom: 18px;
+}
+.brand {
+  font-size: clamp(35px, 8vw, 68px);
+  font-weight: 800;
+  letter-spacing: 5px;
+  margin: 0;
+  text-shadow: 0 0 24px rgba(57,201,255,.45);
+}
+.tagline {
+  color: #9bbbd0;
+  letter-spacing: 2px;
+  font-size: 11px;
+  margin: 16px 0 30px;
+}
+.boot-status {
+  color: var(--cyan);
+  font-family: monospace;
+  font-size: 12px;
+  min-height: 18px;
+  margin-bottom: 13px;
+}
+.progress {
+  width: min(290px, 80vw);
+  height: 3px;
+  background: #19354a;
+  overflow: hidden;
+  margin-bottom: 30px;
+}
+.progress-bar {
+  height: 100%;
+  width: 0;
+  background: var(--cyan);
+  box-shadow: 0 0 12px var(--blue);
+  transition: width .25s;
+}
+.enter {
+  color: #061421;
+  border: 0;
+  background: linear-gradient(100deg, #8ceaff, #2ab8f3);
+  padding: 15px 27px;
+  letter-spacing: 2px;
+  font-size: 11px;
+  font-weight: bold;
+  box-shadow: 0 0 25px rgba(57,201,255,.25);
+  transition: .25s;
+}
+.enter:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(57,201,255,.5); }
+.skip {
+  color: #7899b2;
+  background: transparent;
+  border: 0;
+  margin-top: 18px;
+  font-size: 11px;
+}
+#app { display: none; }
+#app.visible { display: block; }
+.topbar {
+  min-height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(4,13,23,.96);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.logo { color: var(--cyan); font-weight: 800; letter-spacing: 2px; font-size: 18px; }
+.logo small { display: block; color: var(--muted); font-size: 8px; letter-spacing: 3px; margin-top: 4px; }
+.top-right { display: flex; align-items: center; gap: 15px; color: var(--muted); font-size: 10px; }
+.online { color: #64e8b4; letter-spacing: 1px; }
+.layout { display: flex; min-height: calc(100vh - 65px); }
+.sidebar {
+  width: 225px;
+  flex-shrink: 0;
+  padding: 22px 13px;
+  border-right: 1px solid var(--line);
+  background: rgba(5,15,26,.8);
+}
+.nav-label { color: #52748d; font-size: 9px; letter-spacing: 2px; padding: 12px 10px; }
+.nav-btn {
+  width: 100%;
+  text-align: left;
+  color: #9bb6ca;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 12px 11px;
+  margin: 3px 0;
+  font-size: 12px;
+  transition: .2s;
+}
+.nav-btn:hover, .nav-btn.active {
+  color: var(--cyan);
+  border-color: var(--line);
+  background: rgba(32,142,194,.12);
+}
+.nav-btn span { display: inline-block; width: 27px; font-size: 15px; }
+main { flex: 1; min-width: 0; padding: 25px; }
+.welcome {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin-bottom: 23px;
+}
+.welcome h1 { font-size: 23px; margin: 0 0 7px; font-weight: 500; }
+.welcome p { color: var(--muted); margin: 0; font-size: 11px; }
+.clock { color: var(--cyan); font-size: 21px; font-family: monospace; }
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(220px, .85fr);
+  gap: 16px;
+}
+.panel {
+  background: linear-gradient(145deg, rgba(12,34,53,.9), rgba(5,17,29,.92));
+  border: 1px solid var(--line);
+  padding: 19px;
+  position: relative;
+  overflow: hidden;
+}
+.panel-title {
+  color: var(--cyan);
+  letter-spacing: 2px;
+  font-size: 10px;
+  margin-bottom: 17px;
+}
+.main-core {
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(ellipse at center, rgba(26,116,165,.18), transparent 65%),
+    linear-gradient(145deg, rgba(12,34,53,.9), rgba(5,17,29,.92));
+}
+.hud {
+  width: 175px; height: 175px;
+  border-radius: 50%;
+  border: 1px solid rgba(57,201,255,.55);
+  display: grid;
+  place-items: center;
+  position: relative;
+  box-shadow: 0 0 28px rgba(57,201,255,.1), inset 0 0 30px rgba(57,201,255,.07);
+}
+.hud:before, .hud:after {
+  content: "";
+  position: absolute;
+  border: 1px dashed rgba(57,201,255,.35);
+  border-radius: 50%;
+}
+.hud:before { inset: 12px; animation: spin 22s linear infinite; }
+.hud:after { inset: 25px; border-style: solid; border-color: transparent var(--blue) transparent transparent; animation: spin 8s linear infinite reverse; }
+.hud-core {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: radial-gradient(circle, #e2fbff, #36c6ff 22%, #06466d 65%, #061a2a);
+  box-shadow: 0 0 22px #27bfff;
+}
+.core-caption { margin-top: 18px; font-size: 10px; color: var(--cyan); letter-spacing: 3px; }
+.core-sub { margin-top: 7px; font-size: 9px; color: var(--muted); }
+.status-list { display: grid; gap: 15px; }
+.status-row { display: flex; justify-content: space-between; gap: 10px; color: #8ba9bf; font-size: 11px; border-bottom: 1px solid rgba(57,201,255,.1); padding-bottom: 10px; }
+.status-row b { color: #69e4bb; font-weight: 500; }
+.quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+.quick {
+  min-height: 90px;
+  border: 1px solid var(--line);
+  background: rgba(10,30,47,.8);
+  color: #b8d5e8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  font-size: 10px;
+  transition: .2s;
+}
+.quick:hover { border-color: var(--blue); color: var(--cyan); background: rgba(28,113,157,.15); }
+.quick .symbol { font-size: 23px; color: var(--cyan); }
+.section-view { display: none; }
+.section-view.active { display: block; }
+.section-panel { padding: 25px; min-height: 260px; }
+.section-panel h2 { font-size: 22px; font-weight: 500; color: var(--cyan); }
+.section-panel p { color: var(--muted); font-size: 13px; line-height: 1.7; }
+footer { color: #4f7189; text-align: center; font-size: 9px; padding: 25px 0 5px; letter-spacing: 2px; }
+@media(max-width:750px) {
+  .layout { display: block; }
+  .sidebar { width: 100%; display: flex; overflow-x: auto; padding: 8px; border-right: 0; border-bottom: 1px solid var(--line); }
+  .nav-label { display: none; }
+  .nav-btn { min-width: max-content; width: auto; margin: 2px; padding: 10px; }
+  .nav-btn span { width: auto; margin-right: 5px; }
+  main { padding: 16px 12px; }
+  .dashboard-grid { grid-template-columns: 1fr; }
+  .quick-grid { grid-template-columns: repeat(2, 1fr); }
+  .topbar { padding: 12px; }
+  .top-right { gap: 8px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  *, *:before, *:after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+
+<body>
+
+<section id="intro">
+  <div class="intro-grid"></div>
+  <div class="scanlines"></div>
+
+  <div class="core">
+    <div class="ring one"></div>
+    <div class="ring two"></div>
+    <div class="ring three"></div>
+    <div class="core-center"></div>
+  </div>
+
+  <div class="eyebrow">PERSONAL DIGITAL INTERFACE</div>
+  <h1 class="brand">CAP VERSE</h1>
+  <p class="tagline">INTELLIGENCE · INNOVATION · INFINITY</p>
+
+  <div class="boot-status" id="bootStatus">AWAITING SYSTEM INITIALIZATION...</div>
+  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+
+  <button class="enter" id="enterBtn">INITIALIZE EXPERIENCE ↗</button>
+  <button class="skip" id="skipBtn">SKIP INTRO</button>
+</section>
+
+<section id="app">
+  <header class="topbar">
+    <div class="logo">CAP VERSE<small>PERSONAL DIGITAL UNIVERSE</small></div>
+    <div class="top-right">
+      <span id="dateDisplay"></span>
+      <span class="online">● SYSTEM ONLINE</span>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <div>
+        <div class="nav-label">MAIN INTERFACE</div>
+        <button class="nav-btn active" data-page="dashboard"><span>⌂</span>Dashboard</button>
+        <button class="nav-btn" data-page="assistant"><span>◉</span>AI Assistant</button>
+        <div class="nav-label">EXPLORE</div>
+        <button class="nav-btn" data-page="websites"><span>◎</span>Useful Websites</button>
+        <button class="nav-btn" data-page="tools"><span>◇</span>Web Tools</button>
+        <button class="nav-btn" data-page="freelancing"><span>▤</span>Freelancing Academy</button>
+        <button class="nav-btn" data-page="bioverse"><span>✳</span>3D BioVerse</button>
+        <div class="nav-label">CREATE</div>
+        <button class="nav-btn" data-page="coding"><span>⌘</span>Coding Lab</button>
+        <button class="nav-btn" data-page="images"><span>▧</span>Image Studio</button>
+        <button class="nav-btn" data-page="projects"><span>▣</span>Projects</button>
+        <div class="nav-label">SYSTEM</div>
+        <button class="nav-btn" data-page="settings"><span>⚙</span>Settings</button>
+      </div>
+    </aside>
+
+    <main>
+      <section class="section-view active" id="page-dashboard">
+        <div class="welcome">
+          <div>
+            <h1>Welcome, Captain.</h1>
+            <p>Your personal digital universe is ready.</p>
+          </div>
+          <div class="clock" id="clock">00:00:00</div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="panel main-core">
+            <div class="panel-title">CENTRAL INTELLIGENCE SYSTEM</div>
+            <div class="hud"><div class="hud-core"></div></div>
+            <div class="core-caption">CAP VERSE CORE</div>
+            <div class="core-sub">ALL SYSTEMS STANDING BY</div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-title">SYSTEM MONITOR</div>
+            <div class="status-list">
+              <div class="status-row"><span>Interface</span><b>ACTIVE</b></div>
+              <div class="status-row"><span>Core System</span><b>ONLINE</b></div>
+              <div class="status-row"><span>Connection</span><b id="connection">CHECKING</b></div>
+              <div class="status-row"><span>Security</span><b>READY</b></div>
+              <div class="status-row"><span>AI Engine</span><b>NOT CONNECTED</b></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="panel-title">QUICK ACCESS</div>
+          <div class="quick-grid">
+            <button class="quick" data-open="assistant"><span class="symbol">◉</span>AI ASSISTANT</button>
+            <button class="quick" data-open="websites"><span class="symbol">◎</span>WEBSITES</button>
+            <button class="quick" data-open="bioverse"><span class="symbol">✳</span>BIOVERSE</button>
+            <button class="quick" data-open="freelancing"><span class="symbol">▤</span>LEARN SKILLS</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-assistant">
+        <div class="panel section-panel">
+          <h2>AI Assistant</h2>
+          <p>Your AI assistant workspace. The secure AI backend will be connected in a later development step.</p>
+          <p>STATUS: AWAITING AI ENGINE CONNECTION</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-websites">
+        <div class="panel section-panel">
+          <h2>Useful Websites</h2>
+          <p>Your collection of 30 useful websites will be organized here by category.</p>
+          <p>STATUS: RESOURCE LIBRARY SETUP PENDING</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-tools">
+        <div class="panel section-panel">
+          <h2>Web Tools</h2>
+          <p>Your daily-use digital tools will be available in this section.</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-freelancing">
+        <div class="panel section-panel">
+          <h2>Freelancing Academy</h2>
+          <p>Learn freelancing, build a portfolio, improve your skills and prepare for clients.</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-bioverse">
+        <div class="panel section-panel">
+          <h2>3D BioVerse</h2>
+          <p>Explore human anatomy, cells, molecular biology, botany and zoology through interactive 3D learning models.</p>
+          <p>STATUS: 3D MODEL LIBRARY TO BE ADDED</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-coding">
+        <div class="panel section-panel">
+          <h2>Coding Lab</h2>
+          <p>Your programming and website development workspace.</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-images">
+        <div class="panel section-panel">
+          <h2>Image Studio</h2>
+          <p>Your creative image workspace.</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-projects">
+        <div class="panel section-panel">
+          <h2>Projects</h2>
+          <p>Your saved projects and workspaces will appear here.</p>
+        </div>
+      </section>
+
+      <section class="section-view" id="page-settings">
+        <div class="panel section-panel">
+          <h2>System Settings</h2>
+          <p>CAP VERSE interface settings and preferences.</p>
+        </div>
+      </section>
+
+      <footer>CAP VERSE · YOUR PERSONAL DIGITAL UNIVERSE</footer>
+    </main>
+  </div>
+</section>
+
+<script>
+const intro = document.getElementById("intro");
+const app = document.getElementById("app");
+const statusText = document.getElementById("bootStatus");
+const progressBar = document.getElementById("progressBar");
+const enterBtn = document.getElementById("enterBtn");
+
+const bootMessages = [
+  "INITIALIZING CAP VERSE SYSTEM...",
+  "LOADING INTERFACE MODULES...",
+  "CALIBRATING HOLOGRAPHIC DISPLAY...",
+  "CHECKING SYSTEM COMPONENTS...",
+  "WELCOME, CAPTAIN. SYSTEM READY."
+];
+
+let bootIndex = 0;
+let bootProgress = 0;
+
+const bootTimer = setInterval(() => {
+  bootProgress = Math.min(100, bootProgress + 5);
+  progressBar.style.width = bootProgress + "%";
+
+  const nextIndex = Math.min(
+    bootMessages.length - 1,
+    Math.floor(bootProgress / 25)
+  );
+  if (nextIndex !== bootIndex) {
+    bootIndex = nextIndex;
+    statusText.textContent = bootMessages[bootIndex];
+  }
+
+  if (bootProgress >= 100) {
+    clearInterval(bootTimer);
+    enterBtn.textContent = "ENTER CAP VERSE ↗";
+  }
+}, 140);
+
+function speakWelcome() {
+  if (!("speechSynthesis" in window)) return;
+  window.speechSynthesis.cancel();
+  const speech = new SpeechSynthesisUtterance(
+    "Welcome to Cap Verse, Captain. All systems are ready."
+  );
+  speech.rate = 0.88;
+  speech.pitch = 0.75;
+  speech.volume = 1;
+  window.speechSynthesis.speak(speech);
+}
+
+function launchApp(withVoice) {
+  clearInterval(bootTimer);
+  progressBar.style.width = "100%";
+  if (withVoice) speakWelcome();
+
+  intro.classList.add("hidden");
+  app.classList.add("visible");
+  document.body.style.overflowX = "hidden";
+}
+
+enterBtn.addEventListener("click", () => launchApp(true));
+document.getElementById("skipBtn").addEventListener("click", () => launchApp(false));
+
+function openPage(page) {
+  document.querySelectorAll(".section-view").forEach(section => {
+    section.classList.remove("active");
+  });
+  const selected = document.getElementById("page-" + page);
+  if (selected) selected.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === page);
+  });
+}
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => openPage(button.dataset.page));
+});
+
+document.querySelectorAll("[data-open]").forEach(button => {
+  button.addEventListener("click", () => openPage(button.dataset.open));
+});
+
+function updateClock() {
+  const now = new Date();
+  document.getElementById("clock").textContent =
+    now.toLocaleTimeString([], {hour12: false});
+  document.getElementById("dateDisplay").textContent =
+    now.toLocaleDateString([], {day:"2-digit", month:"short", year:"numeric"});
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+document.getElementById("connection").textContent =
+  navigator.onLine ? "CONNECTED" : "OFFLINE";
+
+window.addEventListener("online", () => {
+  document.getElementById("connection").textContent = "CONNECTED";
+});
+window.addEventListener("offline", () => {
+  document.getElementById("connection").textContent = "OFFLINE";
+});
+</script>
+</body>
+</html>
