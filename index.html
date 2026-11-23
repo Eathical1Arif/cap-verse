@@ -1,575 +1,2164 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050b14">
-<title>CAP VERSE | Digital Universe</title>
+<meta name="theme-color" content="#050b16">
+<title>CAP VERSE | Command Interface</title>
 
 <style>
 :root {
-  --blue: #39c9ff;
-  --cyan: #83e5ff;
-  --bg: #050b14;
-  --panel: rgba(9, 25, 42, .88);
-  --line: rgba(57, 201, 255, .24);
-  --muted: #7899b2;
+  --bg:#050b16;
+  --panel:#091629;
+  --line:#153b5a;
+  --cyan:#42d9ff;
+  --blue:#168cff;
+  --text:#e7f7ff;
+  --muted:#7f9db4;
+  --good:#55f2b2;
 }
-* { box-sizing: border-box; }
+
+* {box-sizing:border-box}
+
 body {
-  margin: 0;
-  background: var(--bg);
-  color: #eaf7ff;
-  font-family: Arial, Helvetica, sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial, sans-serif;
 }
-button { font: inherit; cursor: pointer; }
-#intro, #app { min-height: 100vh; }
+
+button,input,textarea,select {
+  font:inherit;
+}
+
+button {cursor:pointer}
+
 #intro {
-  position: fixed;
-  inset: 0;
-  z-index: 20;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 25px;
-  background:
-    radial-gradient(ellipse at center, #102b43 0%, #071522 42%, #030810 100%);
-  transition: opacity 1s, visibility 1s;
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+  background:radial-gradient(ellipse,#102c48,#050b16 65%);
 }
-#intro.hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+
+.intro-kicker {
+  color:var(--cyan);
+  letter-spacing:5px;
+  font-size:11px;
 }
-.scanlines {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: .15;
-  background: repeating-linear-gradient(
-    to bottom, transparent 0px, transparent 3px,
-    rgba(70,190,255,.12) 4px
-  );
+
+.logo {
+  font-size:clamp(40px,10vw,85px);
+  font-weight:900;
+  letter-spacing:8px;
+  color:white;
+  text-shadow:0 0 15px var(--blue),0 0 40px var(--blue);
+  margin:25px 0;
 }
-.intro-grid {
-  position: absolute;
-  inset: 0;
-  opacity: .2;
-  background-image:
-    linear-gradient(rgba(55,190,255,.12) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(55,190,255,.12) 1px, transparent 1px);
-  background-size: 48px 48px;
-  mask-image: radial-gradient(ellipse, black, transparent 75%);
+
+.intro-sub {
+  color:#9dbbd0;
+  letter-spacing:3px;
+  font-size:11px;
 }
-.core {
-  width: 190px;
-  height: 190px;
-  position: relative;
-  display: grid;
-  place-items: center;
-  margin-bottom: 32px;
+
+.intro-actions {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:35px;
 }
-.ring {
-  position: absolute;
-  border: 1px solid rgba(68,204,255,.6);
-  border-radius: 50%;
-  box-shadow: 0 0 18px rgba(40,170,255,.12);
+
+.btn {
+  border:1px solid var(--cyan);
+  background:#0c3151;
+  color:white;
+  padding:12px 17px;
+  border-radius:6px;
+  font-size:12px;
 }
-.ring.one { inset: 0; border-top: 2px solid var(--cyan); animation: spin 7s linear infinite; }
-.ring.two { inset: 15px; border-bottom: 2px solid var(--blue); animation: spin 5s linear infinite reverse; }
-.ring.three { inset: 31px; border-left: 2px solid #b3f1ff; animation: spin 9s linear infinite; }
-.core-center {
-  width: 65px; height: 65px;
-  border-radius: 50%;
-  background: radial-gradient(circle, #d9faff 0%, #3dcaff 22%, #075078 65%, #031322 100%);
-  box-shadow: 0 0 24px #28bfff, 0 0 65px rgba(40,180,255,.45);
-  animation: pulse 2s ease-in-out infinite;
+
+.btn:hover {
+  background:#10456c;
+  box-shadow:0 0 18px #168cff66;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes pulse { 50% { transform: scale(1.12); opacity: .8; } }
-.eyebrow {
-  color: var(--cyan);
-  letter-spacing: 4px;
-  font-size: 10px;
-  margin-bottom: 18px;
+
+.secondary {
+  background:#0a1422;
+  border-color:#34516a;
 }
-.brand {
-  font-size: clamp(35px, 8vw, 68px);
-  font-weight: 800;
-  letter-spacing: 5px;
-  margin: 0;
-  text-shadow: 0 0 24px rgba(57,201,255,.45);
-}
-.tagline {
-  color: #9bbbd0;
-  letter-spacing: 2px;
-  font-size: 11px;
-  margin: 16px 0 30px;
-}
-.boot-status {
-  color: var(--cyan);
-  font-family: monospace;
-  font-size: 12px;
-  min-height: 18px;
-  margin-bottom: 13px;
-}
-.progress {
-  width: min(290px, 80vw);
-  height: 3px;
-  background: #19354a;
-  overflow: hidden;
-  margin-bottom: 30px;
-}
-.progress-bar {
-  height: 100%;
-  width: 0;
-  background: var(--cyan);
-  box-shadow: 0 0 12px var(--blue);
-  transition: width .25s;
-}
-.enter {
-  color: #061421;
-  border: 0;
-  background: linear-gradient(100deg, #8ceaff, #2ab8f3);
-  padding: 15px 27px;
-  letter-spacing: 2px;
-  font-size: 11px;
-  font-weight: bold;
-  box-shadow: 0 0 25px rgba(57,201,255,.25);
-  transition: .25s;
-}
-.enter:hover { transform: translateY(-3px); box-shadow: 0 0 35px rgba(57,201,255,.5); }
-.skip {
-  color: #7899b2;
-  background: transparent;
-  border: 0;
-  margin-top: 18px;
-  font-size: 11px;
-}
-#app { display: none; }
-#app.visible { display: block; }
+
 .topbar {
-  min-height: 65px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 12px 20px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(4,13,23,.96);
-  position: sticky;
-  top: 0;
-  z-index: 5;
+  height:62px;
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:#050d19;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 18px;
 }
-.logo { color: var(--cyan); font-weight: 800; letter-spacing: 2px; font-size: 18px; }
-.logo small { display: block; color: var(--muted); font-size: 8px; letter-spacing: 3px; margin-top: 4px; }
-.top-right { display: flex; align-items: center; gap: 15px; color: var(--muted); font-size: 10px; }
-.online { color: #64e8b4; letter-spacing: 1px; }
-.layout { display: flex; min-height: calc(100vh - 65px); }
+
+.brand {
+  color:var(--cyan);
+  font-weight:900;
+  letter-spacing:3px;
+}
+
+.brand small {
+  display:block;
+  font-size:9px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+#app {display:none}
+
+.layout {
+  display:grid;
+  grid-template-columns:230px 1fr;
+  min-height:calc(100vh - 62px);
+}
+
 .sidebar {
-  width: 225px;
-  flex-shrink: 0;
-  padding: 22px 13px;
-  border-right: 1px solid var(--line);
-  background: rgba(5,15,26,.8);
+  background:#06101d;
+  border-right:1px solid var(--line);
+  padding:15px 10px;
 }
-.nav-label { color: #52748d; font-size: 9px; letter-spacing: 2px; padding: 12px 10px; }
-.nav-btn {
-  width: 100%;
-  text-align: left;
-  color: #9bb6ca;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  padding: 12px 11px;
-  margin: 3px 0;
-  font-size: 12px;
-  transition: .2s;
+
+.navlabel {
+  color:#54748c;
+  font-size:10px;
+  padding:12px;
+  letter-spacing:2px;
 }
-.nav-btn:hover, .nav-btn.active {
-  color: var(--cyan);
-  border-color: var(--line);
-  background: rgba(32,142,194,.12);
+
+.navbtn {
+  display:block;
+  width:100%;
+  text-align:left;
+  background:transparent;
+  color:#9db5c8;
+  border:1px solid transparent;
+  padding:12px;
+  margin:3px 0;
+  border-radius:5px;
+  font-size:12px;
 }
-.nav-btn span { display: inline-block; width: 27px; font-size: 15px; }
-main { flex: 1; min-width: 0; padding: 25px; }
-.welcome {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 15px;
-  flex-wrap: wrap;
-  margin-bottom: 23px;
+
+.navbtn:hover,
+.navbtn.active {
+  color:white;
+  background:#0b2740;
+  border-color:#174a6c;
 }
-.welcome h1 { font-size: 23px; margin: 0 0 7px; font-weight: 500; }
-.welcome p { color: var(--muted); margin: 0; font-size: 11px; }
-.clock { color: var(--cyan); font-size: 21px; font-family: monospace; }
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(220px, .85fr);
-  gap: 16px;
+
+.main {
+  padding:22px;
+  max-width:1500px;
+  width:100%;
+  margin:auto;
+  min-width:0;
 }
+
+.page {display:none}
+.page.active {display:block}
+
+.eyebrow {
+  color:var(--cyan);
+  font-size:10px;
+  letter-spacing:3px;
+}
+
+.heading {
+  font-size:30px;
+  margin:10px 0;
+}
+
+.sub {
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.6;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  gap:14px;
+  margin-top:20px;
+}
+
 .panel {
-  background: linear-gradient(145deg, rgba(12,34,53,.9), rgba(5,17,29,.92));
-  border: 1px solid var(--line);
-  padding: 19px;
-  position: relative;
-  overflow: hidden;
+  background:linear-gradient(145deg,#0a1b2e,#071322);
+  border:1px solid var(--line);
+  border-radius:8px;
+  padding:17px;
+  min-width:0;
 }
-.panel-title {
-  color: var(--cyan);
-  letter-spacing: 2px;
-  font-size: 10px;
-  margin-bottom: 17px;
+
+.span3 {grid-column:span 3}
+.span4 {grid-column:span 4}
+.span6 {grid-column:span 6}
+.span8 {grid-column:span 8}
+.span12 {grid-column:span 12}
+
+.metric {
+  font-size:27px;
+  color:var(--cyan);
+  font-weight:bold;
+  margin:10px 0;
 }
-.main-core {
-  min-height: 320px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  background:
-    radial-gradient(ellipse at center, rgba(26,116,165,.18), transparent 65%),
-    linear-gradient(145deg, rgba(12,34,53,.9), rgba(5,17,29,.92));
+
+.muted {
+  color:var(--muted);
+  font-size:11px;
 }
-.hud {
-  width: 175px; height: 175px;
-  border-radius: 50%;
-  border: 1px solid rgba(57,201,255,.55);
-  display: grid;
-  place-items: center;
-  position: relative;
-  box-shadow: 0 0 28px rgba(57,201,255,.1), inset 0 0 30px rgba(57,201,255,.07);
+
+.panel h3 {
+  font-size:13px;
+  margin-top:0;
+  letter-spacing:1px;
 }
-.hud:before, .hud:after {
-  content: "";
-  position: absolute;
-  border: 1px dashed rgba(57,201,255,.35);
-  border-radius: 50%;
+
+.field,textarea,select {
+  width:100%;
+  background:#06101d;
+  color:white;
+  border:1px solid #20415b;
+  border-radius:5px;
+  padding:11px;
+  outline:none;
+  margin:5px 0;
 }
-.hud:before { inset: 12px; animation: spin 22s linear infinite; }
-.hud:after { inset: 25px; border-style: solid; border-color: transparent var(--blue) transparent transparent; animation: spin 8s linear infinite reverse; }
-.hud-core {
-  width: 58px; height: 58px; border-radius: 50%;
-  background: radial-gradient(circle, #e2fbff, #36c6ff 22%, #06466d 65%, #061a2a);
-  box-shadow: 0 0 22px #27bfff;
+
+textarea {
+  min-height:100px;
+  resize:vertical;
 }
-.core-caption { margin-top: 18px; font-size: 10px; color: var(--cyan); letter-spacing: 3px; }
-.core-sub { margin-top: 7px; font-size: 9px; color: var(--muted); }
-.status-list { display: grid; gap: 15px; }
-.status-row { display: flex; justify-content: space-between; gap: 10px; color: #8ba9bf; font-size: 11px; border-bottom: 1px solid rgba(57,201,255,.1); padding-bottom: 10px; }
-.status-row b { color: #69e4bb; font-weight: 500; }
-.quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
-.quick {
-  min-height: 90px;
-  border: 1px solid var(--line);
-  background: rgba(10,30,47,.8);
-  color: #b8d5e8;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 9px;
-  font-size: 10px;
-  transition: .2s;
+
+.row {
+  display:flex;
+  gap:9px;
+  align-items:center;
+  flex-wrap:wrap;
 }
-.quick:hover { border-color: var(--blue); color: var(--cyan); background: rgba(28,113,157,.15); }
-.quick .symbol { font-size: 23px; color: var(--cyan); }
-.section-view { display: none; }
-.section-view.active { display: block; }
-.section-panel { padding: 25px; min-height: 260px; }
-.section-panel h2 { font-size: 22px; font-weight: 500; color: var(--cyan); }
-.section-panel p { color: var(--muted); font-size: 13px; line-height: 1.7; }
-footer { color: #4f7189; text-align: center; font-size: 9px; padding: 25px 0 5px; letter-spacing: 2px; }
-@media(max-width:750px) {
-  .layout { display: block; }
-  .sidebar { width: 100%; display: flex; overflow-x: auto; padding: 8px; border-right: 0; border-bottom: 1px solid var(--line); }
-  .nav-label { display: none; }
-  .nav-btn { min-width: max-content; width: auto; margin: 2px; padding: 10px; }
-  .nav-btn span { width: auto; margin-right: 5px; }
-  main { padding: 16px 12px; }
-  .dashboard-grid { grid-template-columns: 1fr; }
-  .quick-grid { grid-template-columns: repeat(2, 1fr); }
-  .topbar { padding: 12px; }
-  .top-right { gap: 8px; }
+
+.grow {flex:1}
+
+.notice {
+  background:#071b2b;
+  border-left:2px solid var(--cyan);
+  color:#9eb8ca;
+  padding:12px;
+  font-size:12px;
+  line-height:1.6;
 }
-@media(prefers-reduced-motion:reduce) {
-  *, *:before, *:after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+
+.line {
+  height:1px;
+  background:var(--line);
+  margin:14px 0;
+}
+
+.toolgrid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
+  gap:12px;
+  margin-top:15px;
+}
+
+.tooltile {
+  background:#081a2b;
+  border:1px solid var(--line);
+  border-radius:7px;
+  padding:14px;
+}
+
+.tooltile strong {
+  font-size:13px;
+}
+
+.tooltile p {
+  font-size:11px;
+  color:var(--muted);
+}
+
+.tooltile a {
+  color:var(--cyan);
+  font-size:11px;
+  text-decoration:none;
+}
+
+.list {
+  display:grid;
+  gap:9px;
+}
+
+.item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  background:#071522;
+  border:1px solid #153650;
+  border-radius:6px;
+  font-size:12px;
+}
+
+.item a {color:var(--cyan)}
+
+.chatlog {
+  height:300px;
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding:8px;
+}
+
+.bubble {
+  max-width:90%;
+  padding:11px;
+  border-radius:7px;
+  background:#0b2942;
+  font-size:12px;
+  line-height:1.5;
+}
+
+.bubble.user {
+  align-self:flex-end;
+  background:#103a52;
+}
+
+.bubble.bot {align-self:flex-start}
+
+.tag {
+  color:var(--cyan);
+  border:1px solid #1c5273;
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:10px;
+}
+
+.progress {
+  height:6px;
+  background:#10283c;
+  border-radius:8px;
+  overflow:hidden;
+}
+
+.progress span {
+  display:block;
+  height:100%;
+  width:0;
+  background:var(--cyan);
+}
+
+#bioCanvas {
+  width:100%;
+  height:320px;
+  display:block;
+  background:#06101d;
+  border:1px solid var(--line);
+  border-radius:7px;
+}
+
+.footer {
+  color:#47677f;
+  text-align:center;
+  font-size:10px;
+  padding:30px 0;
+}
+
+@media(max-width:800px) {
+  .layout {grid-template-columns:1fr}
+  .sidebar {
+    display:flex;
+    overflow-x:auto;
+    position:sticky;
+    top:62px;
+    z-index:40;
+    padding:7px;
+    border-right:0;
+    border-bottom:1px solid var(--line);
+  }
+  .navlabel {display:none}
+  .navbtn {
+    width:auto;
+    white-space:nowrap;
+    flex:0 0 auto;
+    padding:10px;
+  }
+  .main {padding:14px}
+  .span3,.span4,.span6,.span8 {
+    grid-column:span 12;
+  }
+  .heading {font-size:25px}
 }
 </style>
 </head>
 
 <body>
 
+<!-- CINEMATIC INTRO -->
+
 <section id="intro">
-  <div class="intro-grid"></div>
-  <div class="scanlines"></div>
+  <div class="intro-kicker">PERSONAL DIGITAL COMMAND SYSTEM</div>
 
-  <div class="core">
-    <div class="ring one"></div>
-    <div class="ring two"></div>
-    <div class="ring three"></div>
-    <div class="core-center"></div>
+  <div class="logo">CAP VERSE</div>
+
+  <div class="intro-sub">
+    INTELLIGENCE • CREATIVITY • TECHNOLOGY
   </div>
 
-  <div class="eyebrow">PERSONAL DIGITAL INTERFACE</div>
-  <h1 class="brand">CAP VERSE</h1>
-  <p class="tagline">INTELLIGENCE · INNOVATION · INFINITY</p>
+  <div class="intro-actions">
+    <button class="btn" id="enterBtn">
+      INITIALIZE EXPERIENCE ↗
+    </button>
 
-  <div class="boot-status" id="bootStatus">AWAITING SYSTEM INITIALIZATION...</div>
-  <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+    <button class="btn secondary" id="skipBtn">
+      SKIP INTRO
+    </button>
+  </div>
 
-  <button class="enter" id="enterBtn">INITIALIZE EXPERIENCE ↗</button>
-  <button class="skip" id="skipBtn">SKIP INTRO</button>
+  <p class="muted" style="margin-top:25px">
+    SYSTEM READY // ACCESS AUTHORIZED
+  </p>
 </section>
 
-<section id="app">
-  <header class="topbar">
-    <div class="logo">CAP VERSE<small>PERSONAL DIGITAL UNIVERSE</small></div>
-    <div class="top-right">
-      <span id="dateDisplay"></span>
-      <span class="online">● SYSTEM ONLINE</span>
+<!-- MAIN APPLICATION -->
+
+<div id="app">
+
+<header class="topbar">
+  <div class="brand">
+    CAP VERSE
+    <small>COMMAND INTERFACE / VERSION 1.0</small>
+  </div>
+
+  <div class="row">
+    <span style="color:var(--good);font-size:11px">
+      ● SYSTEM ONLINE
+    </span>
+    <button class="btn secondary" id="homeBtn">
+      HOME
+    </button>
+  </div>
+</header>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside class="sidebar">
+
+  <div class="navlabel">MAIN SYSTEM</div>
+
+  <button class="navbtn active" data-page="dashboard">
+    ◈ Dashboard
+  </button>
+
+  <button class="navbtn" data-page="assistant">
+    ✧ AI Assistant
+  </button>
+
+  <button class="navbtn" data-page="websites">
+    ◎ Useful Websites
+  </button>
+
+  <button class="navbtn" data-page="webtools">
+    ⌘ Web Tools
+  </button>
+
+  <button class="navbtn" data-page="academy">
+    ▤ Freelancing Academy
+  </button>
+
+  <button class="navbtn" data-page="bio">
+    🧬 BioVerse 3D
+  </button>
+
+  <button class="navbtn" data-page="coding">
+    〈/〉 Coding Lab
+  </button>
+
+  <button class="navbtn" data-page="image">
+    ▧ Image Studio
+  </button>
+
+  <button class="navbtn" data-page="projects">
+    ▣ Projects
+  </button>
+
+  <button class="navbtn" data-page="settings">
+    ⚙ Settings
+  </button>
+
+</aside>
+
+<!-- MAIN CONTENT -->
+
+<main class="main">
+
+<!-- DASHBOARD -->
+
+<section class="page active" id="page-dashboard">
+
+  <div class="eyebrow">WELCOME / COMMANDER</div>
+
+  <h1 class="heading">Command Dashboard</h1>
+
+  <p class="sub">
+    Your digital workspace for learning, building and exploring.
+  </p>
+
+  <div class="grid">
+
+    <div class="panel span3">
+      <div class="muted">SYSTEM STATUS</div>
+      <div class="metric">ONLINE</div>
+      <div class="muted">Modules initialized</div>
     </div>
-  </header>
 
-  <div class="layout">
-    <aside class="sidebar">
-      <div>
-        <div class="nav-label">MAIN INTERFACE</div>
-        <button class="nav-btn active" data-page="dashboard"><span>⌂</span>Dashboard</button>
-        <button class="nav-btn" data-page="assistant"><span>◉</span>AI Assistant</button>
-        <div class="nav-label">EXPLORE</div>
-        <button class="nav-btn" data-page="websites"><span>◎</span>Useful Websites</button>
-        <button class="nav-btn" data-page="tools"><span>◇</span>Web Tools</button>
-        <button class="nav-btn" data-page="freelancing"><span>▤</span>Freelancing Academy</button>
-        <button class="nav-btn" data-page="bioverse"><span>✳</span>3D BioVerse</button>
-        <div class="nav-label">CREATE</div>
-        <button class="nav-btn" data-page="coding"><span>⌘</span>Coding Lab</button>
-        <button class="nav-btn" data-page="images"><span>▧</span>Image Studio</button>
-        <button class="nav-btn" data-page="projects"><span>▣</span>Projects</button>
-        <div class="nav-label">SYSTEM</div>
-        <button class="nav-btn" data-page="settings"><span>⚙</span>Settings</button>
+    <div class="panel span3">
+      <div class="muted">QUICK TOOLS</div>
+      <div class="metric">06</div>
+      <div class="muted">Browser utilities</div>
+    </div>
+
+    <div class="panel span3">
+      <div class="muted">RESOURCE LIBRARY</div>
+      <div class="metric">30</div>
+      <div class="muted">Useful websites</div>
+    </div>
+
+    <div class="panel span3">
+      <div class="muted">YOUR PROJECTS</div>
+      <div class="metric" id="projectCount">00</div>
+      <div class="muted">Saved projects</div>
+    </div>
+
+    <div class="panel span8">
+      <h3>MISSION CONTROL</h3>
+
+      <div class="notice">
+        CAP VERSE is ready. Select a module from the navigation bar
+        to begin your digital experience.
       </div>
-    </aside>
 
-    <main>
-      <section class="section-view active" id="page-dashboard">
-        <div class="welcome">
-          <div>
-            <h1>Welcome, Captain.</h1>
-            <p>Your personal digital universe is ready.</p>
-          </div>
-          <div class="clock" id="clock">00:00:00</div>
+      <div class="line"></div>
+
+      <div class="row">
+        <button class="btn" data-go="assistant">
+          OPEN AI ASSISTANT
+        </button>
+
+        <button class="btn secondary" data-go="coding">
+          CODING LAB
+        </button>
+
+        <button class="btn secondary" data-go="bio">
+          BIOVERSE
+        </button>
+      </div>
+    </div>
+
+    <div class="panel span4">
+      <h3>SYSTEM CLOCK</h3>
+      <div class="metric" id="clock">--:--:--</div>
+      <div class="muted" id="today"></div>
+      <div class="line"></div>
+      <div class="muted">LOCAL DEVICE TIME</div>
+    </div>
+
+    <div class="panel span12">
+      <h3>RECENT ACTIVITY</h3>
+      <div class="list" id="activity">
+        <div class="item">System initialized
+          <span class="tag">READY</span>
         </div>
+      </div>
+    </div>
 
-        <div class="dashboard-grid">
-          <div class="panel main-core">
-            <div class="panel-title">CENTRAL INTELLIGENCE SYSTEM</div>
-            <div class="hud"><div class="hud-core"></div></div>
-            <div class="core-caption">CAP VERSE CORE</div>
-            <div class="core-sub">ALL SYSTEMS STANDING BY</div>
-          </div>
-
-          <div class="panel">
-            <div class="panel-title">SYSTEM MONITOR</div>
-            <div class="status-list">
-              <div class="status-row"><span>Interface</span><b>ACTIVE</b></div>
-              <div class="status-row"><span>Core System</span><b>ONLINE</b></div>
-              <div class="status-row"><span>Connection</span><b id="connection">CHECKING</b></div>
-              <div class="status-row"><span>Security</span><b>READY</b></div>
-              <div class="status-row"><span>AI Engine</span><b>NOT CONNECTED</b></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel" style="margin-top:16px">
-          <div class="panel-title">QUICK ACCESS</div>
-          <div class="quick-grid">
-            <button class="quick" data-open="assistant"><span class="symbol">◉</span>AI ASSISTANT</button>
-            <button class="quick" data-open="websites"><span class="symbol">◎</span>WEBSITES</button>
-            <button class="quick" data-open="bioverse"><span class="symbol">✳</span>BIOVERSE</button>
-            <button class="quick" data-open="freelancing"><span class="symbol">▤</span>LEARN SKILLS</button>
-          </div>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-assistant">
-        <div class="panel section-panel">
-          <h2>AI Assistant</h2>
-          <p>Your AI assistant workspace. The secure AI backend will be connected in a later development step.</p>
-          <p>STATUS: AWAITING AI ENGINE CONNECTION</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-websites">
-        <div class="panel section-panel">
-          <h2>Useful Websites</h2>
-          <p>Your collection of 30 useful websites will be organized here by category.</p>
-          <p>STATUS: RESOURCE LIBRARY SETUP PENDING</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-tools">
-        <div class="panel section-panel">
-          <h2>Web Tools</h2>
-          <p>Your daily-use digital tools will be available in this section.</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-freelancing">
-        <div class="panel section-panel">
-          <h2>Freelancing Academy</h2>
-          <p>Learn freelancing, build a portfolio, improve your skills and prepare for clients.</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-bioverse">
-        <div class="panel section-panel">
-          <h2>3D BioVerse</h2>
-          <p>Explore human anatomy, cells, molecular biology, botany and zoology through interactive 3D learning models.</p>
-          <p>STATUS: 3D MODEL LIBRARY TO BE ADDED</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-coding">
-        <div class="panel section-panel">
-          <h2>Coding Lab</h2>
-          <p>Your programming and website development workspace.</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-images">
-        <div class="panel section-panel">
-          <h2>Image Studio</h2>
-          <p>Your creative image workspace.</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-projects">
-        <div class="panel section-panel">
-          <h2>Projects</h2>
-          <p>Your saved projects and workspaces will appear here.</p>
-        </div>
-      </section>
-
-      <section class="section-view" id="page-settings">
-        <div class="panel section-panel">
-          <h2>System Settings</h2>
-          <p>CAP VERSE interface settings and preferences.</p>
-        </div>
-      </section>
-
-      <footer>CAP VERSE · YOUR PERSONAL DIGITAL UNIVERSE</footer>
-    </main>
   </div>
 </section>
+
+<!-- AI ASSISTANT -->
+
+<section class="page" id="page-assistant">
+
+  <div class="eyebrow">CONVERSATIONAL INTERFACE</div>
+
+  <h1 class="heading">AI Assistant</h1>
+
+  <p class="sub">
+    Chat interface with voice input and speech output.
+  </p>
+
+  <div class="grid">
+
+    <div class="panel span8">
+
+      <div class="chatlog" id="chatlog">
+        <div class="bubble bot">
+          Welcome to CAP VERSE. I am your assistant interface.
+          Ask me something to get started.
+        </div>
+      </div>
+
+      <div class="row">
+        <input class="field grow" id="chatInput"
+          placeholder="Type your message...">
+
+        <button class="btn" id="sendChat">SEND</button>
+
+        <button class="btn secondary" id="voiceInput">
+          🎙 VOICE
+        </button>
+      </div>
+
+    </div>
+
+    <div class="panel span4">
+      <h3>ASSISTANT STATUS</h3>
+
+      <div class="notice">
+        Real AI responses require a secure backend and an AI API.
+        This interface is ready for that connection.
+      </div>
+
+      <div class="line"></div>
+
+      <button class="btn secondary" id="speakWelcome">
+        TEST VOICE
+      </button>
+
+      <button class="btn secondary" id="clearChat">
+        CLEAR CHAT
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- USEFUL WEBSITES -->
+
+<section class="page" id="page-websites">
+
+  <div class="eyebrow">RESOURCE DATABASE</div>
+
+  <h1 class="heading">Useful Websites</h1>
+
+  <p class="sub">
+    30 resources for coding, learning, design and freelancing.
+  </p>
+
+  <input class="field" id="siteSearch"
+    placeholder="Search websites...">
+
+  <div class="toolgrid" id="siteGrid"></div>
+
+</section>
+<!-- WEB TOOLS -->
+
+<section class="page" id="page-webtools">
+
+  <div class="eyebrow">UTILITY MODULES</div>
+  <h1 class="heading">Web Tools</h1>
+
+  <p class="sub">
+    Useful tools that run directly in your browser.
+  </p>
+
+  <div class="grid">
+
+    <!-- WORD COUNTER -->
+
+    <div class="panel span6">
+      <h3>WORD & CHARACTER COUNTER</h3>
+
+      <textarea id="countText"
+        placeholder="Write or paste text here..."></textarea>
+
+      <div class="row">
+        <span class="tag" id="wordCount">0 words</span>
+        <span class="tag" id="charCount">0 characters</span>
+      </div>
+    </div>
+
+    <!-- CALCULATOR -->
+
+    <div class="panel span6">
+      <h3>QUICK CALCULATOR</h3>
+
+      <input class="field" id="calcInput"
+        placeholder="Example: (25+5)*2">
+
+      <div class="row">
+        <button class="btn" id="calculate">CALCULATE</button>
+        <span class="muted" id="calcResult">Result appears here</span>
+      </div>
+    </div>
+
+    <!-- CASE CONVERTER -->
+
+    <div class="panel span6">
+      <h3>CASE CONVERTER</h3>
+
+      <textarea id="caseText"
+        placeholder="Enter text..."></textarea>
+
+      <div class="row">
+        <button class="btn secondary" data-case="upper">
+          UPPERCASE
+        </button>
+
+        <button class="btn secondary" data-case="lower">
+          lowercase
+        </button>
+
+        <button class="btn secondary" data-case="title">
+          Title Case
+        </button>
+      </div>
+    </div>
+
+    <!-- PASSWORD GENERATOR -->
+
+    <div class="panel span6">
+      <h3>PASSWORD GENERATOR</h3>
+
+      <input class="field" id="passLength"
+        type="number" min="8" max="64" value="16">
+
+      <button class="btn" id="makePassword">
+        GENERATE PASSWORD
+      </button>
+
+      <input class="field" id="passwordOutput"
+        readonly placeholder="Generated password">
+
+      <button class="btn secondary" id="copyPassword">
+        COPY PASSWORD
+      </button>
+    </div>
+
+    <!-- QR GENERATOR -->
+
+    <div class="panel span6">
+      <h3>QR CODE GENERATOR</h3>
+
+      <input class="field" id="qrText"
+        placeholder="Enter text or website URL">
+
+      <button class="btn" id="makeQR">
+        GENERATE QR
+      </button>
+
+      <div id="qrOutput" style="margin-top:12px"></div>
+
+      <p class="muted">
+        QR generation requires an internet connection.
+      </p>
+    </div>
+
+    <!-- NOTES -->
+
+    <div class="panel span6">
+      <h3>PERSONAL NOTES</h3>
+
+      <textarea id="notes"
+        placeholder="Write your notes here..."></textarea>
+
+      <span class="muted" id="noteStatus">
+        Auto-save enabled
+      </span>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- FREELANCING ACADEMY -->
+
+<section class="page" id="page-academy">
+
+  <div class="eyebrow">SKILLS DEVELOPMENT</div>
+
+  <h1 class="heading">Freelancing Academy</h1>
+
+  <p class="sub">
+    Learn skills and prepare for your first freelance client.
+  </p>
+
+  <div class="grid">
+
+    <div class="panel span6">
+
+      <h3>LEARNING ROADMAP</h3>
+
+      <div class="list" id="lessonList"></div>
+
+      <div class="line"></div>
+
+      <div class="progress">
+        <span id="lessonProgress"></span>
+      </div>
+
+      <p class="muted" id="lessonProgressText">
+        0% completed
+      </p>
+
+    </div>
+
+    <div class="panel span6">
+
+      <h3>FREELANCE PLATFORMS</h3>
+
+      <div class="list">
+
+        <div class="item">
+          Fiverr
+          <a href="https://www.fiverr.com/"
+             target="_blank" rel="noopener">OPEN ↗</a>
+        </div>
+
+        <div class="item">
+          Upwork
+          <a href="https://www.upwork.com/"
+             target="_blank" rel="noopener">OPEN ↗</a>
+        </div>
+
+        <div class="item">
+          Freelancer
+          <a href="https://www.freelancer.com/"
+             target="_blank" rel="noopener">OPEN ↗</a>
+        </div>
+
+        <div class="item">
+          PeoplePerHour
+          <a href="https://www.peopleperhour.com/"
+             target="_blank" rel="noopener">OPEN ↗</a>
+        </div>
+
+      </div>
+
+      <div class="line"></div>
+
+      <div class="notice">
+        Start with HTML, CSS and JavaScript.
+        Build three portfolio projects, prepare your profile
+        and send personalized proposals.
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- BIOVERSE -->
+
+<section class="page" id="page-bio">
+
+  <div class="eyebrow">INTERACTIVE SCIENCE MODULE</div>
+
+  <h1 class="heading">BioVerse 3D</h1>
+
+  <p class="sub">
+    Explore simplified educational 3D models.
+  </p>
+
+  <div class="grid">
+
+    <div class="panel span8">
+
+      <canvas id="bioCanvas"></canvas>
+
+      <div class="row">
+
+        <select class="field" id="bioSelect"
+          style="max-width:220px">
+
+          <option value="dna">DNA Helix</option>
+          <option value="cell">Cell Model</option>
+          <option value="neuron">Neuron</option>
+          <option value="blood">Red Blood Cell</option>
+
+        </select>
+
+        <button class="btn secondary" id="rotateToggle">
+          PAUSE ROTATION
+        </button>
+
+        <button class="btn secondary" id="resetBio">
+          RESET VIEW
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="panel span4">
+
+      <h3 id="bioTitle">DNA DOUBLE HELIX</h3>
+
+      <p class="sub" id="bioDescription">
+        DNA stores hereditary information.
+        Its two strands form a double helix connected by base pairs.
+      </p>
+
+      <div class="notice">
+        Drag to rotate the model.
+        Scroll to zoom when supported.
+        These models are educational illustrations,
+        not medical references.
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- CODING LAB -->
+
+<section class="page" id="page-coding">
+
+  <div class="eyebrow">DEVELOPER WORKBENCH</div>
+
+  <h1 class="heading">Coding Lab</h1>
+
+  <p class="sub">
+    Write HTML code and see the result in the preview.
+  </p>
+
+  <div class="grid">
+
+    <div class="panel span6">
+
+      <h3>HTML EDITOR</h3>
+
+      <textarea id="codeInput"
+        style="min-height:300px;font-family:monospace"
+        spellcheck="false"><h1>Hello CAP VERSE</h1>
+<p>My first web page.</p>
+<button onclick="alert('It works!')">Click me</button></textarea>
+
+      <div class="row">
+
+        <button class="btn" id="runCode">
+          RUN PREVIEW
+        </button>
+
+        <button class="btn secondary" id="resetCode">
+          RESET CODE
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="panel span6">
+
+      <h3>LIVE PREVIEW</h3>
+
+      <iframe id="codePreview"
+        title="HTML preview"
+        sandbox="allow-scripts"
+        style="width:100%;height:350px;background:white;border:1px solid #153b5a">
+      </iframe>
+
+    </div>
+
+  </div>
+
+</section>
+<!-- IMAGE STUDIO -->
+<section class="page" id="page-image">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">CREATIVE LAB</div>
+      <h1>Image Studio</h1>
+      <p>Upload, preview, resize and download your images.</p>
+    </div>
+    <span class="tag">CREATIVE TOOLS</span>
+  </div>
+
+  <div class="grid">
+    <div class="panel">
+      <h3>Upload Image</h3>
+      <p class="muted">Select an image from your device.</p>
+      <input class="field" type="file" id="imageUpload" accept="image/*">
+
+      <div class="notice">
+        Your selected image is processed in your browser.
+      </div>
+
+      <div class="field">
+        <label for="imageWidth">Width (pixels)</label>
+        <input class="field" type="number" id="imageWidth"
+          min="1" max="5000" placeholder="Enter width">
+      </div>
+
+      <div class="field">
+        <label for="imageHeight">Height (pixels)</label>
+        <input class="field" type="number" id="imageHeight"
+          min="1" max="5000" placeholder="Enter height">
+      </div>
+
+      <label class="row">
+        <input type="checkbox" id="keepRatio" checked>
+        Keep original aspect ratio
+      </label>
+
+      <button class="btn primary" id="resizeImage">
+        Resize Image
+      </button>
+
+      <button class="btn" id="downloadImage">
+        Download Image
+      </button>
+
+      <p class="muted" id="imageStatus">
+        No image selected.
+      </p>
+    </div>
+
+    <div class="panel">
+      <h3>Image Preview</h3>
+      <div class="image-preview" id="imagePreview">
+        <div class="empty-state">
+          <div class="big-icon">▧</div>
+          <p>Your image will appear here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section class="page" id="page-projects">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">WORKSPACE</div>
+      <h1>My Projects</h1>
+      <p>Keep your ideas and projects organized.</p>
+    </div>
+    <span class="tag">PERSONAL SPACE</span>
+  </div>
+
+  <div class="panel">
+    <h3>Create New Project</h3>
+
+    <div class="field">
+      <label for="projectName">Project Name</label>
+      <input class="field" id="projectName"
+        type="text" placeholder="Enter project name">
+    </div>
+
+    <div class="field">
+      <label for="projectDescription">Project Description</label>
+      <textarea class="field" id="projectDescription"
+        rows="3" placeholder="Write a short description"></textarea>
+    </div>
+
+    <button class="btn primary" id="addProject">
+      + Add Project
+    </button>
+  </div>
+
+  <div class="panel">
+    <div class="row">
+      <h3>Saved Projects</h3>
+      <span class="tag" id="projectTotal">0 Projects</span>
+    </div>
+
+    <div id="projectList" class="list">
+      <div class="empty-state">
+        <p>No projects added yet.</p>
+        <p class="muted">Create your first project above.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="page" id="page-settings">
+  <div class="pagehead">
+    <div>
+      <div class="eyebrow">SYSTEM CONTROL</div>
+      <h1>Settings</h1>
+      <p>Customize your CAP VERSE experience.</p>
+    </div>
+    <span class="tag">PREFERENCES</span>
+  </div>
+
+  <div class="panel">
+    <h3>Interface Appearance</h3>
+    <p class="muted">Choose your preferred interface accent color.</p>
+
+    <div class="field">
+      <label for="accentColor">Accent Color</label>
+      <input type="color" id="accentColor" value="#00bfff">
+    </div>
+
+    <button class="btn primary" id="saveAppearance">
+      Save Appearance
+    </button>
+
+    <button class="btn" id="resetAppearance">
+      Reset Appearance
+    </button>
+  </div>
+
+  <div class="panel">
+    <h3>System Information</h3>
+
+    <div class="list">
+      <div class="item">
+        <span>Platform</span>
+        <strong>CAP VERSE</strong>
+      </div>
+
+      <div class="item">
+        <span>Interface</span>
+        <strong>JARVIS HUD</strong>
+      </div>
+
+      <div class="item">
+        <span>Version</span>
+        <strong>1.0</strong>
+      </div>
+
+      <div class="item">
+        <span>Storage</span>
+        <strong>Browser Local Storage</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Important Information</h3>
+    <p class="muted">
+      Some features require an internet connection.
+      AI services require a properly configured backend and API.
+      Never put private API keys directly inside public website code.
+    </p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="eyebrow">CAP VERSE</div>
+  <p>Designed for ideas beyond limits.</p>
+  <p class="muted">Your Digital Universe · Version 1.0</p>
+</footer>
 
 <script>
-const intro = document.getElementById("intro");
-const app = document.getElementById("app");
-const statusText = document.getElementById("bootStatus");
-const progressBar = document.getElementById("progressBar");
-const enterBtn = document.getElementById("enterBtn");
+/* =====================================
+   CAP VERSE - MAIN SYSTEM
+===================================== */
 
-const bootMessages = [
-  "INITIALIZING CAP VERSE SYSTEM...",
-  "LOADING INTERFACE MODULES...",
-  "CALIBRATING HOLOGRAPHIC DISPLAY...",
-  "CHECKING SYSTEM COMPONENTS...",
-  "WELCOME, CAPTAIN. SYSTEM READY."
-];
+document.addEventListener("DOMContentLoaded", function () {
 
-let bootIndex = 0;
-let bootProgress = 0;
+  const $ = (id) => document.getElementById(id);
 
-const bootTimer = setInterval(() => {
-  bootProgress = Math.min(100, bootProgress + 5);
-  progressBar.style.width = bootProgress + "%";
-
-  const nextIndex = Math.min(
-    bootMessages.length - 1,
-    Math.floor(bootProgress / 25)
-  );
-  if (nextIndex !== bootIndex) {
-    bootIndex = nextIndex;
-    statusText.textContent = bootMessages[bootIndex];
+  function saveData(key, value) {
+    try {
+      localStorage.setItem(key, JSON.stringify(value));
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
-  if (bootProgress >= 100) {
-    clearInterval(bootTimer);
-    enterBtn.textContent = "ENTER CAP VERSE ↗";
+  function loadData(key, fallback) {
+    try {
+      const value = localStorage.getItem(key);
+      return value ? JSON.parse(value) : fallback;
+    } catch (error) {
+      return fallback;
+    }
   }
-}, 140);
 
-function speakWelcome() {
-  if (!("speechSynthesis" in window)) return;
-  window.speechSynthesis.cancel();
-  const speech = new SpeechSynthesisUtterance(
-    "Welcome to Cap Verse, Captain. All systems are ready."
-  );
-  speech.rate = 0.88;
-  speech.pitch = 0.75;
-  speech.volume = 1;
-  window.speechSynthesis.speak(speech);
-}
+  function notify(message) {
+    alert(message);
+  }
 
-function launchApp(withVoice) {
-  clearInterval(bootTimer);
-  progressBar.style.width = "100%";
-  if (withVoice) speakWelcome();
+  /* INTRO SCREEN */
 
-  intro.classList.add("hidden");
-  app.classList.add("visible");
-  document.body.style.overflowX = "hidden";
-}
+  function enterApp() {
+    const intro = $("intro");
+    const app = $("app");
 
-enterBtn.addEventListener("click", () => launchApp(true));
-document.getElementById("skipBtn").addEventListener("click", () => launchApp(false));
+    if (intro) intro.style.display = "none";
+    if (app) app.style.display = "block";
 
-function openPage(page) {
-  document.querySelectorAll(".section-view").forEach(section => {
-    section.classList.remove("active");
+    showPage("dashboard");
+    window.scrollTo(0, 0);
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const speech = new SpeechSynthesisUtterance(
+        "Welcome to Cap Verse. Your digital universe is ready."
+      );
+      speech.rate = 0.95;
+      window.speechSynthesis.speak(speech);
+    }
+  }
+
+  if ($("enterBtn")) {
+    $("enterBtn").addEventListener("click", enterApp);
+  }
+
+  if ($("skipBtn")) {
+    $("skipBtn").addEventListener("click", enterApp);
+  }
+
+  /* NAVIGATION */
+
+  function showPage(pageName) {
+    document.querySelectorAll(".page").forEach(page => {
+      page.classList.remove("active");
+    });
+
+    const target = $("page-" + pageName);
+    if (target) target.classList.add("active");
+
+    document.querySelectorAll(".navbtn[data-page]").forEach(button => {
+      button.classList.toggle(
+        "active",
+        button.dataset.page === pageName
+      );
+    });
+
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    if (pageName === "bio") drawBio();
+    if (pageName === "projects") renderProjects();
+    if (pageName === "websites") renderSites();
+  }
+
+  document.querySelectorAll(".navbtn[data-page]").forEach(button => {
+    button.addEventListener("click", function () {
+      showPage(this.dataset.page);
+    });
   });
-  const selected = document.getElementById("page-" + page);
-  if (selected) selected.classList.add("active");
 
-  document.querySelectorAll(".nav-btn").forEach(button => {
-    button.classList.toggle("active", button.dataset.page === page);
+  if ($("homeBtn")) {
+    $("homeBtn").addEventListener("click", () => showPage("dashboard"));
+  }
+
+  /* DASHBOARD CLOCK */
+
+  function updateClock() {
+    const now = new Date();
+
+    if ($("clock")) {
+      $("clock").textContent = now.toLocaleTimeString();
+    }
+
+    if ($("today")) {
+      $("today").textContent = now.toLocaleDateString(
+        undefined,
+        { weekday: "long", day: "numeric", month: "long", year: "numeric" }
+      );
+    }
+  }
+
+  updateClock();
+  setInterval(updateClock, 1000);
+
+  /* USEFUL WEBSITES */
+
+  const websites = [
+    ["Google", "Search engine", "https://www.google.com"],
+    ["YouTube", "Videos and tutorials", "https://www.youtube.com"],
+    ["Wikipedia", "Online encyclopedia", "https://www.wikipedia.org"],
+    ["GitHub", "Code hosting and projects", "https://github.com"],
+    ["GitHub Pages", "Free website hosting", "https://pages.github.com"],
+    ["Netlify", "Website deployment", "https://www.netlify.com"],
+    ["Vercel", "Web hosting platform", "https://vercel.com"],
+    ["CodePen", "Online code editor", "https://codepen.io"],
+    ["Replit", "Online development workspace", "https://replit.com"],
+    ["W3Schools", "Learn web development", "https://www.w3schools.com"],
+    ["MDN Web Docs", "Web development documentation", "https://developer.mozilla.org"],
+    ["freeCodeCamp", "Free coding lessons", "https://www.freecodecamp.org"],
+    ["Canva", "Graphic design", "https://www.canva.com"],
+    ["Figma", "Interface design", "https://www.figma.com"],
+    ["Photopea", "Online photo editor", "https://www.photopea.com"],
+    ["Remove.bg", "Background removal", "https://www.remove.bg"],
+    ["Unsplash", "Free stock photos", "https://unsplash.com"],
+    ["Pexels", "Photos and videos", "https://www.pexels.com"],
+    ["Google Fonts", "Free fonts", "https://fonts.google.com"],
+    ["Font Awesome", "Icons for websites", "https://fontawesome.com"],
+    ["ChatGPT", "AI assistant", "https://chatgpt.com"],
+    ["Google Gemini", "AI assistant", "https://gemini.google.com"],
+    ["Hugging Face", "AI models and tools", "https://huggingface.co"],
+    ["Kaggle", "Data science and datasets", "https://www.kaggle.com"],
+    ["Fiverr", "Freelance marketplace", "https://www.fiverr.com"],
+    ["Upwork", "Freelance jobs", "https://www.upwork.com"],
+    ["Freelancer", "Find freelance work", "https://www.freelancer.com"],
+    ["LinkedIn", "Professional networking", "https://www.linkedin.com"],
+    ["Google Drive", "Cloud file storage", "https://drive.google.com"],
+    ["TinyPNG", "Image compression", "https://tinypng.com"]
+  ];
+
+  function renderSites(filter = "") {
+    const grid = $("siteGrid");
+    if (!grid) return;
+
+    const filtered = websites.filter(site =>
+      site.join(" ").toLowerCase().includes(filter.toLowerCase())
+    );
+
+    grid.innerHTML = "";
+
+    if (!filtered.length) {
+      grid.innerHTML = '<p class="muted">No matching websites found.</p>';
+      return;
+    }
+
+    filtered.forEach(site => {
+      const card = document.createElement("a");
+      card.className = "item";
+      card.href = site[2];
+      card.target = "_blank";
+      card.rel = "noopener noreferrer";
+
+      const title = document.createElement("strong");
+      title.textContent = site[0];
+
+      const description = document.createElement("p");
+      description.textContent = site[1];
+
+      card.append(title, description);
+      grid.appendChild(card);
+    });
+  }
+
+  renderSites();
+
+  if ($("siteSearch")) {
+    $("siteSearch").addEventListener("input", function () {
+      renderSites(this.value);
+    });
+  }
+
+  /* AI ASSISTANT - FRONTEND DEMO */
+
+  function addChatMessage(message, type) {
+    const log = $("chatlog");
+    if (!log) return;
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble " + type;
+    bubble.textContent = message;
+    log.appendChild(bubble);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function sendMessage() {
+    const input = $("chatInput");
+    if (!input) return;
+
+    const message = input.value.trim();
+    if (!message) return;
+
+    addChatMessage(message, "user");
+    input.value = "";
+
+    setTimeout(() => {
+      addChatMessage(
+        "CAP VERSE interface is working. To receive real AI answers, connect a secure backend and an AI API. This demo does not send your message to an AI service.",
+        "assistant"
+      );
+    }, 500);
+  }
+
+  if ($("sendChat")) {
+    $("sendChat").addEventListener("click", sendMessage);
+  }
+
+  if ($("chatInput")) {
+    $("chatInput").addEventListener("keydown", event => {
+      if (event.key === "Enter") sendMessage();
+    });
+  }
+
+  if ($("clearChat")) {
+    $("clearChat").addEventListener("click", () => {
+      if ($("chatlog")) $("chatlog").innerHTML = "";
+    });
+  }
+
+  if ($("speakWelcome")) {
+    $("speakWelcome").addEventListener("click", () => {
+      if (!("speechSynthesis" in window)) {
+        notify("Speech is not supported by this browser.");
+        return;
+      }
+
+      const speech = new SpeechSynthesisUtterance(
+        "Welcome to Cap Verse. How can I help you today?"
+      );
+      window.speechSynthesis.speak(speech);
+    });
+  }
+
+  if ($("voiceInput")) {
+    $("voiceInput").addEventListener("click", () => {
+      const SpeechRecognition =
+        window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!SpeechRecognition) {
+        notify("Voice recognition is not supported in this browser.");
+        return;
+      }
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.onresult = event => {
+        if ($("chatInput")) {
+          $("chatInput").value = event.results[0][0].transcript;
+        }
+      };
+      recognition.onerror = () => notify("Voice recognition failed. Try again.");
+      recognition.start();
+    });
+  }
+
+  /* WORD COUNTER */
+
+  if ($("countText")) {
+    $("countText").addEventListener("input", function () {
+      const text = this.value;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+
+      if ($("wordCount")) $("wordCount").textContent = words;
+      if ($("charCount")) $("charCount").textContent = text.length;
+    });
+  }
+
+  /* CALCULATOR */
+
+  if ($("calculate")) {
+    $("calculate").addEventListener("click", () => {
+      const input = $("calcInput");
+      const result = $("calcResult");
+
+      if (!input || !result) return;
+
+      const expression = input.value.trim();
+
+      if (!expression || !/^[0-9+\-*/().%\s]+$/.test(expression)) {
+        result.textContent = "Invalid expression";
+        return;
+      }
+
+      try {
+        const answer = Function('"use strict"; return (' + expression + ')')();
+
+        result.textContent = Number.isFinite(answer)
+          ? String(answer)
+          : "Invalid calculation";
+      } catch (error) {
+        result.textContent = "Invalid calculation";
+      }
+    });
+  }
+
+  /* TEXT CASE CONVERTER */
+
+  document.querySelectorAll("[data-case]").forEach(button => {
+    button.addEventListener("click", () => {
+      const area = $("caseText");
+      if (!area) return;
+
+      const mode = button.dataset.case;
+      const text = area.value;
+
+      if (mode === "upper") area.value = text.toUpperCase();
+      if (mode === "lower") area.value = text.toLowerCase();
+      if (mode === "title") {
+        area.value = text.toLowerCase().replace(/\b\w/g, char => char.toUpperCase());
+      }
+    });
   });
-}
 
-document.querySelectorAll(".nav-btn").forEach(button => {
-  button.addEventListener("click", () => openPage(button.dataset.page));
-});
+  /* PASSWORD GENERATOR */
 
-document.querySelectorAll("[data-open]").forEach(button => {
-  button.addEventListener("click", () => openPage(button.dataset.open));
-});
+  if ($("makePassword")) {
+    $("makePassword").addEventListener("click", () => {
+      const length = Math.max(
+        4,
+        Math.min(64, Number($("passLength")?.value) || 16)
+      );
 
-function updateClock() {
-  const now = new Date();
-  document.getElementById("clock").textContent =
-    now.toLocaleTimeString([], {hour12: false});
-  document.getElementById("dateDisplay").textContent =
-    now.toLocaleDateString([], {day:"2-digit", month:"short", year:"numeric"});
-}
-updateClock();
-setInterval(updateClock, 1000);
+      const chars =
+        "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%&*";
 
-document.getElementById("connection").textContent =
-  navigator.onLine ? "CONNECTED" : "OFFLINE";
+      let password = "";
 
-window.addEventListener("online", () => {
-  document.getElementById("connection").textContent = "CONNECTED";
-});
-window.addEventListener("offline", () => {
-  document.getElementById("connection").textContent = "OFFLINE";
+      try {
+        const random = new Uint32Array(length);
+        crypto.getRandomValues(random);
+        for (let i = 0; i < length; i++) {
+          password += chars[random[i] % chars.length];
+        }
+      } catch (error) {
+        for (let i = 0; i < length; i++) {
+          password += chars[Math.floor(Math.random() * chars.length)];
+        }
+      }
+
+      if ($("passwordOutput")) $("passwordOutput").value = password;
+    });
+  }
+
+  if ($("copyPassword")) {
+    $("copyPassword").addEventListener("click", async () => {
+      const value = $("passwordOutput")?.value || "";
+      if (!value) return;
+
+      try {
+        await navigator.clipboard.writeText(value);
+        notify("Password copied.");
+      } catch (error) {
+        notify("Copy not available. Select and copy the password manually.");
+      }
+    });
+  }
+
+  /* QR GENERATOR */
+
+  if ($("makeQR")) {
+    $("makeQR").addEventListener("click", () => {
+      const text = $("qrText")?.value.trim();
+      const output = $("qrOutput");
+
+      if (!text || !output) {
+        notify("Enter text or a website link first.");
+        return;
+      }
+
+      output.innerHTML = "";
+
+      const image = document.createElement("img");
+      image.alt = "Generated QR code";
+      image.width = 220;
+      image.height = 220;
+      image.src =
+        "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" +
+        encodeURIComponent(text);
+
+      output.appendChild(image);
+
+      const note = document.createElement("p");
+      note.className = "muted";
+      note.textContent = "QR image is generated using an external service.";
+      output.appendChild(note);
+    });
+  }
+
+  /* NOTES */
+
+  if ($("notes")) {
+    $("notes").value = loadData("capverse_notes", "");
+
+    $("notes").addEventListener("input", function () {
+      const success = saveData("capverse_notes", this.value);
+
+      if ($("noteStatus")) {
+        $("noteStatus").textContent = success
+          ? "Notes saved in this browser."
+          : "Unable to save notes.";
+      }
+    });
+  }
+
+  /* FREELANCING ACADEMY PROGRESS */
+
+  function updateAcademyProgress() {
+    const list = $("lessonList");
+    if (!list) return;
+
+    const checks = list.querySelectorAll('input[type="checkbox"]');
+    const completed = list.querySelectorAll('input[type="checkbox"]:checked').length;
+    const total = checks.length;
+
+    const percentage = total ? Math.round(completed / total * 100) : 0;
+
+    if ($("lessonProgress")) {
+      $("lessonProgress").style.width = percentage + "%";
+    }
+
+    if ($("lessonProgressText")) {
+      $("lessonProgressText").textContent =
+        completed + " / " + total + " completed (" + percentage + "%)";
+    }
+
+    saveData("capverse_academy", Array.from(checks).map(check => check.checked));
+  }
+
+  if ($("lessonList")) {
+    const saved = loadData("capverse_academy", []);
+
+    const checks = $("lessonList").querySelectorAll('input[type="checkbox"]');
+
+    checks.forEach((check, index) => {
+      check.checked = Boolean(saved[index]);
+      check.addEventListener("change", updateAcademyProgress);
+    });
+
+    updateAcademyProgress();
+  }
+
+  /* BIOVERSE CANVAS VISUALIZATION */
+
+  let bioAnimation = null;
+  let bioAngle = 0;
+  let bioRotate = true;
+
+  const bioInfo = {
+    dna: ["DNA Structure", "A simplified visual representation of a DNA double helix."],
+    cell: ["Human Cell", "An educational illustration of a simplified human cell."],
+    neuron: ["Neuron", "A simplified illustration of a nerve cell and its branches."],
+    blood: ["Red Blood Cell", "A simplified illustration of a red blood cell."]
+  };
+
+  function drawBio() {
+    const canvas = $("bioCanvas");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const width = canvas.clientWidth || 500;
+    const height = canvas.clientHeight || 320;
+    const ratio = window.devicePixelRatio || 1;
+
+    canvas.width = width * ratio;
+    canvas.height = height * ratio;
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+
+    const type = $("bioSelect")?.value || "dna";
+    const centerX = width / 2;
+    const centerY = height / 2;
+    const scale = Math.min(width, height) * 0.30;
+
+    ctx.clearRect(0, 0, width, height);
+
+    ctx.fillStyle = "rgba(0,180,255,0.04)";
+    ctx.fillRect(0, 0, width, height);
+
+    /* HUD grid */
+    ctx.strokeStyle = "rgba(0,180,255,0.10)";
+    ctx.lineWidth = 1;
+
+    for (let x = 0; x < width; x += 25) {
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, height);
+      ctx.stroke();
+    }
+
+    for (let y = 0; y < height; y += 25) {
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(width, y);
+      ctx.stroke();
+    }
+
+    /* Orbital rings */
+    ctx.save();
+    ctx.translate(centerX, centerY);
+    ctx.rotate(bioAngle * 0.25);
+
+    for (let i = 0; i < 3; i++) {
+      ctx.beginPath();
+      ctx.ellipse(0, 0, scale + i * 22, scale * 0.55 + i * 15, i * 0.4, 0, Math.PI * 2);
+      ctx.strokeStyle = "rgba(0,190,255,0.35)";
+      ctx.stroke();
+    }
+
+    ctx.restore();
+
+    if (type === "dna") {
+      for (let i = 0; i < 100; i++) {
+        const y = centerY - scale + i * (scale * 2 / 100);
+        const angle = i * 0.18 + bioAngle;
+        const x1 = centerX + Math.sin(angle) * scale * 0.55;
+        const x2 = centerX - Math.sin(angle) * scale * 0.55;
+
+        ctx.strokeStyle = "rgba(0,200,255,0.55)";
+        ctx.beginPath();
+        ctx.moveTo(x1, y);
+        ctx.lineTo(x2, y);
+        ctx.stroke();
+
+        ctx.fillStyle = i % 2 ? "#27caff" : "#8b79ff";
+        ctx.beginPath();
+        ctx.arc(x1, y, 3, 0, Math.PI * 2);
+        ctx.arc(x2, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (type === "cell") {
+      const gradient = ctx.createRadialGradient(
+        centerX - 30, centerY - 30, 10,
+        centerX, centerY, scale
+      );
+      gradient.addColorStop(0, "rgba(80,220,255,0.8)");
+      gradient.addColorStop(1, "rgba(0,70,150,0.18)");
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, scale, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "#38cfff";
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.fillStyle = "#9c85ff";
+      ctx.beginPath();
+      ctx.arc(centerX + 10, centerY, scale * 0.32, 0, Math.PI * 2);
+      ctx.fill();
+
+      for (let i = 0; i < 10; i++) {
+        const angle = i * Math.PI / 5 + bioAngle;
+        ctx.fillStyle = "#55e4c4";
+        ctx.beginPath();
+        ctx.arc(
+          centerX + Math.cos(angle) * scale * 0.68,
+          centerY + Math.sin(angle) * scale * 0.68,
+          5, 0, Math.PI * 2
+        );
+        ctx.fill();
+      }
+    } else if (type === "neuron") {
+      ctx.save();
+      ctx.translate(centerX, centerY);
+      ctx.rotate(bioAngle * 0.2);
+
+      ctx.strokeStyle = "#42cfff";
+      ctx.lineWidth = 4;
+
+      for (let i = 0; i < 12; i++) {
+        const angle = i * Math.PI / 6;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(Math.cos(angle) * scale * 0.85, Math.sin(angle) * scale * 0.85);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.moveTo(Math.cos(angle) * scale * 0.55, Math.sin(angle) * scale * 0.55);
+        ctx.lineTo(Math.cos(angle + 0.2) * scale, Math.sin(angle + 0.2) * scale);
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = "#a28bff";
+      ctx.beginPath();
+      ctx.arc(0, 0, scale * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.restore();
+    } else {
+      const gradient = ctx.createRadialGradient(
+        centerX - 20, centerY - 20, 5,
+        centerX, centerY, scale
+      );
+      gradient.addColorStop(0, "#ff8b9b");
+      gradient.addColorStop(1, "#9e203f");
+
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.ellipse(centerX, centerY, scale, scale * 0.58, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "rgba(60,0,20,0.35)";
+      ctx.beginPath();
+      ctx.ellipse(centerX, centerY, scale * 0.38, scale * 0.25, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    if (bioRotate) {
+      bioAngle += 0.012;
+    }
+
+    if (bioAnimation) cancelAnimationFrame(bioAnimation);
+    bioAnimation = requestAnimationFrame(drawBio);
+  }
+
+  if ($("bioSelect")) {
+    $("bioSelect").addEventListener("change", function () {
+      const info = bioInfo[this.value];
+
+      if (info) {
+        if ($("bioTitle")) $("bioTitle").textContent = info[0];
+        if ($("bioDescription")) $("bioDescription").textContent = info[1];
+      }
+
+      drawBio();
+    });
+  }
+
+  if ($("rotateToggle")) {
+    $("rotateToggle").addEventListener("click", () => {
+      bioRotate = !bioRotate;
+      $("rotateToggle").textContent = bioRotate ? "Pause Rotation" : "Resume Rotation";
+    });
+  }
+
+  if ($("resetBio")) {
+    $("resetBio").addEventListener("click", () => {
+      bioAngle = 0;
+      drawBio();
+    });
+  }
+
+  window.addEventListener("resize", () => {
+    if ($("page-bio")?.classList.contains("active")) drawBio();
+  });
+
+  /* CODING LAB */
+
+  const defaultCode = `<!DOCTYPE html>
+<html>
+<head>
+  <title>My First Page</title>
+  <style>
+    body {
+      background: #071426;
+      color: #27caff;
+      font-family: Arial;
+      text-align: center;
+      padding: 40px;
+    }
+    button {
+      padding: 12px 20px;
+      border: 0;
+      border-radius: 8px;
+      background: #27caff;
+      color: #00101c;
+    }
+  </style>
+</head>
+<body>
+  <h1>Hello, CAP VERSE!</h1>
+  <p>My first website is working.</p>
+  <button onclick="alert('Welcome!')">Click Me</button>
+</body>
+</html>`;
+
+  if ($("codeInput") && !$("codeInput").value.trim()) {
+    $("codeInput").value = defaultCode;
+  }
+
+  function runCode() {
+    if (!$("codeInput") || !$("codePreview")) return;
+
+    $("codePreview").srcdoc = $("codeInput").value;
+  }
+
+  if ($("runCode")) {
+    $("runCode").addEventListener("click", runCode);
+  }
+
+  if ($("resetCode")) {
+    $("resetCode").addEventListener("click", () => {
+      if ($("codeInput")) $("codeInput").value = defaultCode;
+      runCode();
+    });
+  }
+
+  runCode();
+
+  /* IMAGE STUDIO */
+
+  let selectedImage = null;
+  let imageObjectURL = null;
+
+  if ($("imageUpload")) {
+    $("imageUpload").addEventListener("change", function () {
+      const file = this.files && this.files[0];
+
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        notify("Please select a valid image.");
+        return;
+      }
+
+      if (imageObjectURL) URL.revokeObjectURL(imageObjectURL);
+
+      imageObjectURL = URL.createObjectURL(file);
+      selectedImage = new Image();
+
+      selectedImage.onload = function () {
+        if ($("imageWidth")) $("imageWidth").value = selectedImage.naturalWidth;
+        if ($("imageHeight")) $("imageHeight").value = selectedImage.naturalHeight;
+
+        const preview = $("imagePreview");
+        if (preview) {
+          preview.innerHTML = "";
+          const img = document.createElement("img");
+          img.src = imageObjectURL;
+          img.alt = "Selected image preview";
+          img.style.maxWidth = "100%";
+          img.style.maxHeight = "350px";
+          img.style.objectFit = "contain";
+          preview.appendChild(img);
+        }
+
+        if ($("imageStatus")) {
+          $("imageStatus").textContent = "Image loaded successfully.";
+        }
+      };
+
+      selectedImage.onerror = () => {
+        notify("Unable to open this image.");
+      };
+
+      selectedImage.src = imageObjectURL;
+    });
+  }
+
+  if ($("resizeImage")) {
+    $("resizeImage").addEventListener("click", () => {
+      if (!selectedImage || !selectedImage.complete) {
+        notify("Upload an image first.");
+        return;
+      }
+
+      let width = Number($("imageWidth")?.value);
+      let height = Number($("imageHeight")?.value);
+
+      if (!width || width < 1 || !height || height < 1 ||
+          width > 5000 || height > 5000) {
+        notify("Enter valid dimensions between 1 and 5000.");
+        return;
+      }
+
+      if ($("keepRatio")?.checked) {
+        height = Math.round(
+          width * selectedImage.naturalHeight / selectedImage.naturalWidth
+        );
+        if ($("imageHeight")) $("imageHeight").value = height;
+      }
+
+      const canvas = document.createElement("canvas");
+      canvas.width = width;
+      canvas.height = height;
+
+      const context = canvas.getContext("2d");
+      context.drawImage(selectedImage, 0, 0, width, height);
+
+      canvas.toBlob(blob => {
+        if (!blob) {
+          notify("Image resizing failed.");
+          return;
+        }
+
+        const resizedURL = URL.createObjectURL(blob);
+        const preview = $("imagePreview");
+
+        if (preview) {
+          preview.innerHTML = "";
+          const img = document.createElement("img");
+          img.src = resizedURL;
+          img.alt = "Resized image preview";
+          img.style.maxWidth = "100%";
+          img.style.maxHeight = "350px";
+          img.style.objectFit = "contain";
+          preview.appendChild(img);
+        }
+
+        selectedImage = new Image();
+        selectedImage.onload = () => URL.revokeObjectURL(resizedURL);
+        selectedImage.src = resizedURL;
+
+        if ($("imageStatus")) {
+          $("imageStatus").textContent =
+            "Image resized to " + width + " × " + height + ".";
+        }
+      }, "image/png");
+    });
+  }
+
+  if ($("downloadImage")) {
+    $("downloadImage").addEventListener("click", () => {
+      const previewImage = $("imagePreview")?.querySelector("img");
+
+      if (!previewImage) {
+        notify("Upload or resize an image first.");
+        return;
+      }
+
+      const link = document.createElement("a");
+      link.href = previewImage.src;
+      link.download = "cap-verse-image.png";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    });
+  }
+
+  /* PROJECT MANAGER */
+
+  let projects = loadData("capverse_projects", []);
+
+  function renderProjects() {
+    const list = $("projectList");
+    if (!list) return;
+
+    list.innerHTML = "";
+
+    if ($("projectTotal")) {
+      $("projectTotal").textContent = projects.length + " Projects";
+    }
+
+    if ($("projectCount")) {
+      $("projectCount").textContent = projects.length;
+    }
+
+    if (!projects.length) {
+      const empty = document.createElement("div");
+      empty.className = "empty-state";
+      empty.textContent = "No projects yet. Create your first project above.";
+      list.appendChild(empty);
+      return;
+    }
+
+    projects.forEach((project, index) => {
+      const item = document.createElement("div");
+      item.className = "item";
+
+      const heading = document.createElement("strong");
+      heading.textContent = project.name;
+
+      const description = document.createElement("p");
+      description.textContent = project.description || "No description added.";
+
+      const remove = document.createElement("button");
+      remove.className = "btn";
+      remove.textContent = "Delete";
+      remove.addEventListener("click", () => {
+        if (confirm("Delete this project?")) {
+          projects.splice(index, 1);
+          saveData("capverse_projects", projects);
+          renderProjects();
+        }
+      });
+
+      item.append(heading, description, remove);
+      list.appendChild(item);
+    });
+  }
+
+  if ($("addProject")) {
+    $("addProject").addEventListener("click", () => {
+      const name = $("projectName")?.value.trim();
+      const description = $("projectDescription")?.value.trim();
+
+      if (!name) {
+        notify("Enter a project name first.");
+        return;
+      }
+
+      projects.push({
+        name,
+        description,
+        created: new Date().toISOString()
+      });
+
+      if (!saveData("capverse_projects", projects)) {
+        projects.pop();
+        notify("Unable to save project. Check browser storage.");
+        return;
+      }
+
+      if ($("projectName")) $("projectName").value = "";
+      if ($("projectDescription")) $("projectDescription").value = "";
+
+      if ($("projectStatus")) {
+        $("projectStatus").textContent = "Project saved successfully.";
+      }
+
+      renderProjects();
+    });
+  }
+
+  renderProjects();
+
+  /* APPEARANCE SETTINGS */
+
+  function applyAccent(color) {
+    document.documentElement.style.setProperty("--accent", color);
+    document.documentElement.style.setProperty("--primary", color);
+    document.documentElement.style.setProperty("--glow", color);
+  }
+
+  const savedAccent = loadData("capverse_accent", "#00bfff");
+
+  if (typeof savedAccent === "string" &&
+      /^#[0-9a-fA-F]{6}$/.test(savedAccent)) {
+    applyAccent(savedAccent);
+    if ($("accentColor")) $("accentColor").value = savedAccent;
+  }
+
+  if ($("saveAppearance")) {
+    $("saveAppearance").addEventListener("click", () => {
+      const color = $("accentColor")?.value || "#00bfff";
+      applyAccent(color);
+      saveData("capverse_accent", color);
+
+      if ($("appearanceStatus")) {
+        $("appearanceStatus").textContent = "Appearance updated.";
+      }
+    });
+  }
+
+  if ($("resetAppearance")) {
+    $("resetAppearance").addEventListener("click", () => {
+      applyAccent("#00bfff");
+      saveData("capverse_accent", "#00bfff");
+
+      if ($("accentColor")) $("accentColor").value = "#00bfff";
+
+      if ($("appearanceStatus")) {
+        $("appearanceStatus").textContent = "Default appearance restored.";
+      }
+    });
+  }
+
+  /* INITIAL STATE */
+
+  renderSites();
+  renderProjects();
+
+  if ($("projectCount")) {
+    $("projectCount").textContent = projects.length;
+  }
+
+  console.log("CAP VERSE system initialized.");
+
 });
 </script>
+
+</main>
+</div>
+</div>
+</div>
 </body>
 </html>
