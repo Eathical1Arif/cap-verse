@@ -4,717 +4,983 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#050914">
-<title>CAP VERSE | Intelligent Universe</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#06111f">
+<title>CAP VERSE | Digital Intelligence</title>
+
 <style>
-:root{--bg:#050914;--panel:#0b1425;--panel2:#101e34;--line:#203550;--cyan:#00eaff;--blue:#438cff;--text:#eaf6ff;--muted:#8ca5bd;--gold:#f4c66a}
+:root {
+  --bg:#06111f;
+  --panel:#0d1c2e;
+  --panel2:#10253b;
+  --accent:#00c8ff;
+  --text:#eaf7ff;
+  --muted:#91a9bd;
+  --border:rgba(0,200,255,.22);
+  --danger:#ff526d;
+}
 *{box-sizing:border-box}
-body{margin:0;background:radial-gradient(circle at 50% -20%,#12345a 0,#050914 48%);color:var(--text);font-family:Inter,Arial,sans-serif;min-height:100vh}
-button,input,select{font:inherit}
-button{cursor:pointer}
-#intro{position:fixed;inset:0;z-index:99;background:#02040a;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;transition:opacity .8s}
-.intro-mark{font:800 clamp(35px,9vw,76px) Orbitron;color:#eafaff;letter-spacing:8px;text-shadow:0 0 12px var(--cyan),0 0 40px #087bff;animation:reveal 2s ease both}
-.intro-sub{color:var(--cyan);letter-spacing:5px;margin:18px 0 35px;font-size:12px}
-@keyframes reveal{from{opacity:0;transform:scale(.7);filter:blur(15px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
-.primary{border:1px solid var(--cyan);background:linear-gradient(110deg,#063b58,#075c81);color:white;padding:13px 24px;border-radius:7px;font-weight:700;letter-spacing:1px;box-shadow:0 0 20px #00d9ff30}
-.primary:hover{box-shadow:0 0 25px #00d9ff70}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+  min-height:100vh;
+}
+button,input,textarea,select{font:inherit}
+button{
+  background:var(--accent);color:#03111c;border:0;
+  padding:11px 15px;border-radius:9px;font-weight:bold;
+  cursor:pointer;transition:.2s;
+}
+button:hover{filter:brightness(1.15);transform:translateY(-1px)}
+button.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+button.danger{background:#451b29;color:#ffdce3;border:1px solid #a43d55}
+input,textarea,select{
+  width:100%;padding:12px;border-radius:9px;
+  border:1px solid var(--border);background:#071523;
+  color:var(--text);outline:none;
+}
+input:focus,textarea:focus,select:focus{border-color:var(--accent)}
+a{color:var(--accent);overflow-wrap:anywhere}
+small,.muted{color:var(--muted)}
+h1,h2,h3{line-height:1.25}
+.hidden{display:none!important}
+.eyebrow{color:var(--accent);letter-spacing:3px;font-size:11px;font-weight:bold}
+.panel{
+  background:linear-gradient(145deg,var(--panel),#091827);
+  border:1px solid var(--border);border-radius:16px;padding:18px;
+  box-shadow:0 12px 35px rgba(0,0,0,.18);
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.stack{display:grid;gap:12px}
+hr{border:0;border-top:1px solid var(--border);margin:20px 0}
+
+/* INTRO */
+#intro{
+  position:fixed;inset:0;z-index:1000;display:flex;
+  align-items:center;justify-content:center;text-align:center;
+  padding:24px;overflow:hidden;
+  background:
+    radial-gradient(ellipse at center,rgba(0,130,190,.22),transparent 60%),
+    linear-gradient(135deg,#020811,#071a2d 60%,#020811);
+}
+#intro:before,#intro:after{
+  content:"";position:absolute;width:320px;height:320px;
+  border:1px solid rgba(0,200,255,.2);border-radius:50%;
+  animation:spin 18s linear infinite;
+}
+#intro:after{width:440px;height:440px;animation-direction:reverse}
+.intro-content{position:relative;z-index:2;max-width:600px}
+.logo-orb{
+  width:100px;height:100px;margin:0 auto 25px;border-radius:50%;
+  border:2px solid var(--accent);display:grid;place-items:center;
+  box-shadow:0 0 35px rgba(0,200,255,.35),inset 0 0 25px rgba(0,200,255,.15);
+  font-size:35px;color:var(--accent);
+}
+#intro h1{font-size:clamp(40px,10vw,76px);letter-spacing:8px;margin:12px 0}
+#intro p{color:var(--muted);letter-spacing:2px}
+#initializeBtn{margin-top:25px;padding:16px 35px;letter-spacing:2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* APP */
 #app{display:none;min-height:100vh}
-.topbar{height:65px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;border-bottom:1px solid var(--line);background:#07101deF;position:sticky;top:0;z-index:20;backdrop-filter:blur(14px)}
-.brand{font:700 19px Orbitron;letter-spacing:2px;color:var(--cyan)}
-.status{font-size:11px;color:#71e9c1;letter-spacing:1px}
+.topbar{
+  height:65px;position:sticky;top:0;z-index:20;
+  background:rgba(4,15,27,.94);backdrop-filter:blur(15px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;padding:0 18px;
+}
+.brand{font-weight:900;letter-spacing:3px;color:var(--accent)}
 .layout{display:flex;min-height:calc(100vh - 65px)}
-.sidebar{width:235px;flex-shrink:0;background:#07101c;border-right:1px solid var(--line);padding:18px 12px}
-.nav-label{font-size:10px;color:#64819c;letter-spacing:2px;padding:15px 10px 8px}
-.nav-btn{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:1px solid transparent;background:transparent;color:#a9bed2;padding:12px;border-radius:8px;margin:3px 0}
-.nav-btn:hover,.nav-btn.active{background:#10243b;border-color:#1c5772;color:var(--cyan)}
-.nav-icon{width:22px;text-align:center;font-size:17px}
+.sidebar{
+  width:235px;flex-shrink:0;background:#081625;
+  border-right:1px solid var(--border);padding:17px 12px;
+}
+.nav-label{font-size:10px;color:var(--muted);letter-spacing:2px;margin:20px 10px 8px}
+.nav-btn{
+  width:100%;display:flex;align-items:center;gap:12px;
+  text-align:left;background:transparent;color:var(--muted);
+  padding:12px;border-radius:9px;margin:3px 0;font-weight:normal;
+}
+.nav-btn.active,.nav-btn:hover{background:rgba(0,200,255,.12);color:var(--accent)}
 main{flex:1;min-width:0;padding:25px;max-width:1500px;margin:auto;width:100%}
 .page{display:none;animation:fade .25s ease}
 .page.active{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-.eyebrow{color:var(--cyan);font:11px Orbitron;letter-spacing:3px}
-h1,h2,h3{font-family:Orbitron,sans-serif}
-h1{font-size:clamp(24px,4vw,38px);margin:10px 0}
-h2{font-size:20px}
-p{color:var(--muted);line-height:1.65}
-.hero{padding:28px;border:1px solid #214b69;border-radius:15px;background:linear-gradient(120deg,#102a43,#091525 70%);box-shadow:0 15px 45px #0005}
-.hero-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:center}
-.hero-art{min-height:160px;display:grid;place-items:center;font-size:90px;color:var(--cyan);text-shadow:0 0 30px #00dfff}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-top:20px}
-.card{background:linear-gradient(145deg,#101f34,#091321);border:1px solid var(--line);border-radius:12px;padding:18px;min-width:0}
-.card h3{font-size:14px;margin:8px 0}
-.card p{font-size:13px;margin:6px 0}
-.card-icon{font-size:26px}
-.card-action{margin-top:12px;background:#102c45;border:1px solid #23516e;color:var(--cyan);padding:9px 12px;border-radius:6px;width:100%}
-.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
-.input{width:100%;padding:12px;background:#071321;color:white;border:1px solid #29435d;border-radius:7px;outline:none;margin:6px 0}
-.input:focus{border-color:var(--cyan)}
-.small-btn{padding:9px 13px;border:1px solid #28617b;background:#102c45;color:var(--cyan);border-radius:6px}
-.muted{color:var(--muted);font-size:12px}
-.social-form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.social-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:18px}
-.social-item{display:flex;align-items:center;gap:12px;background:#0c192a;border:1px solid var(--line);border-radius:10px;padding:13px}
-.social-item .social-symbol{font-size:24px}
-.social-item .social-info{flex:1;min-width:0}
-.social-item strong{display:block;font-size:13px}
-.social-item span{display:block;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
-.social-item a{color:var(--cyan);font-size:12px;text-decoration:none}
-.social-item button{background:transparent;color:#ff8c8c;border:0;padding:5px}
-.viewer{min-height:300px;background:radial-gradient(circle,#12304a,#06101e 70%);border:1px solid #24516b;border-radius:12px;display:grid;place-items:center;overflow:hidden;position:relative}
-.viewer-inner{text-align:center;padding:25px}
-.viewer-figure{font-size:100px;filter:drop-shadow(0 0 25px #00cfff66)}
-.viewer-note{font-size:12px;color:#9db6cc}
-.anatomy-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px;margin:15px 0}
-.anatomy-btn{padding:13px 10px;text-align:left;border-radius:8px;background:#0d1b2c;border:1px solid var(--line);color:#d7edff}
-.anatomy-btn:hover,.anatomy-btn.selected{border-color:var(--cyan);color:var(--cyan)}
-.detail{background:#0b1929;border:1px solid var(--line);border-radius:10px;padding:17px;margin-top:14px}
-.vital-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}
-.vital-card{padding:16px;background:#0c1b2d;border:1px solid var(--line);border-radius:10px}
-.vital-card button{margin-top:10px;width:100%}
-.lock{color:var(--gold);font-size:12px}
-.footer{text-align:center;color:#526c84;font-size:11px;padding:30px 10px}
-@media(max-width:760px){.layout{display:block}.sidebar{width:100%;display:flex;overflow-x:auto;padding:8px;border-right:0;border-bottom:1px solid var(--line)}.nav-label{display:none}.nav-btn{width:auto;min-width:max-content;margin:0 3px;padding:10px}.nav-icon{display:none}main{padding:16px}.hero-grid{grid-template-columns:1fr}.hero-art{min-height:90px;font-size:65px}.social-form{grid-template-columns:1fr}.topbar{padding:0 13px}}
+.page-head{margin-bottom:22px}
+.page-head h2{font-size:27px;margin:8px 0}
+.card-title{color:var(--accent);font-size:12px;letter-spacing:1px}
+.metric{font-size:29px;font-weight:bold;margin:12px 0}
+.feature-card{cursor:pointer;min-height:135px}
+.feature-card:hover{border-color:var(--accent)}
+.feature-icon{font-size:25px;margin-bottom:14px}
+.social-card{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:13px;border:1px solid var(--border);border-radius:11px;margin:9px 0;background:rgba(5,20,35,.7)}
+.social-card>div{min-width:0}
+.social-card a{display:inline-block;margin-top:6px}
+.social-card strong{display:block}
+.social-card small{display:block;overflow-wrap:anywhere;margin-top:4px}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.tool-card{padding:15px;border:1px solid var(--border);border-radius:12px;background:rgba(5,20,35,.65)}
+.tool-card h3{margin-top:0}
+.status{font-size:12px;color:var(--muted);margin-top:8px}
+#anatomyCanvas{width:100%;height:420px;background:#030d18;border-radius:12px;display:block}
+#imagePreview{max-width:100%;max-height:350px;border-radius:12px;display:block}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#030d18;border:1px solid var(--border);padding:15px;border-radius:10px;color:#b9e9ff}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:25px}
+.mobile-menu{display:none}
+@media(max-width:760px){
+  .layout{display:block}
+  .sidebar{
+    display:none;position:fixed;z-index:30;top:65px;bottom:0;
+    left:0;width:260px;overflow:auto;box-shadow:15px 0 35px #0008;
+  }
+  .sidebar.open{display:block}
+  main{padding:17px}
+  .mobile-menu{display:inline-block}
+  #anatomyCanvas{height:320px}
+}
 </style>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 </head>
+
 <body>
-<div id="intro">
-  <div class="intro-mark">CAP VERSE</div>
-  <div class="intro-sub">WELCOME TO YOUR DIGITAL UNIVERSE</div>
-  <button class="primary" onclick="enterVerse()">INITIALIZE SYSTEM</button>
-</div>
 
+<!-- CINEMATIC INTRO -->
+<section id="intro">
+  <div class="intro-content">
+    <div class="logo-orb">CV</div>
+    <div class="eyebrow">PERSONAL DIGITAL INTELLIGENCE</div>
+    <h1>CAP VERSE</h1>
+    <p>BUILD • EXPLORE • CREATE • EVOLVE</p>
+    <button id="initializeBtn">INITIALIZE SYSTEM</button>
+    <p class="status">SYSTEM STANDBY · AWAITING AUTHORIZATION</p>
+  </div>
+</section>
+
+<!-- MAIN APPLICATION -->
 <div id="app">
-<header class="topbar">
-  <div class="brand">✦ CAP VERSE</div>
-  <div class="status">● SYSTEM ONLINE</div>
-</header>
-<div class="layout">
-<aside class="sidebar">
-  <div class="nav-label">MAIN SYSTEM</div>
-  <button class="nav-btn active" data-page="home"><span class="nav-icon">⌂</span>Dashboard</button>
-  <button class="nav-btn" data-page="bio"><span class="nav-icon">◉</span>BioVerse</button>
-  <button class="nav-btn" data-page="vitals"><span class="nav-icon">♡</span>CAP VITALS</button>
-  <button class="nav-btn" data-page="social"><span class="nav-icon">◎</span>SocialVerse</button>
-  <div class="nav-label">INTELLIGENCE</div>
-  <button class="nav-btn" data-page="ai"><span class="nav-icon">✧</span>AI Engine <span class="lock">PREMIUM</span></button>
-  <button class="nav-btn" data-page="themes"><span class="nav-icon">◈</span>Themes</button>
-</aside>
-
-<main>
-<section class="page active" id="page-home">
-  <div class="hero">
-    <div class="hero-grid">
-      <div><div class="eyebrow">PERSONAL COMMAND CENTER</div><h1>Welcome to CAP VERSE</h1><p>Your digital universe. Explore human biology, track personal wellness, manage your social profiles and access your tools from one place.</p><button class="primary" onclick="showPage('social')">OPEN SOCIALVERSE</button></div>
-      <div class="hero-art">◉</div>
+  <header class="topbar">
+    <div class="row">
+      <button class="secondary mobile-menu" id="menuBtn">☰</button>
+      <div class="brand">CAP VERSE <small> / CORE</small></div>
     </div>
-  </div>
-  <div class="cards">
-    <div class="card"><div class="card-icon">🧬</div><h3>BioVerse</h3><p>Explore human anatomy and biological systems.</p><button class="card-action" onclick="showPage('bio')">Explore</button></div>
-    <div class="card"><div class="card-icon">♡</div><h3>CAP VITALS</h3><p>Personal wellness tools and trackers.</p><button class="card-action" onclick="showPage('vitals')">Open Vitals</button></div>
-    <div class="card"><div class="card-icon">◎</div><h3>SocialVerse</h3><p>Keep all your social profile links together.</p><button class="card-action" onclick="showPage('social')">Manage Profiles</button></div>
-    <div class="card"><div class="card-icon">✧</div><h3>AI Engine</h3><p>Advanced AI tools and intelligent assistance.</p><button class="card-action" onclick="showPage('ai')">View Access</button></div>
-  </div>
-</section>
-
-<section class="page" id="page-social">
-  <div class="section-head"><div><div class="eyebrow">YOUR DIGITAL IDENTITY</div><h1>SocialVerse</h1><p>Add your usernames or profile URLs. Visitors can open your profiles directly.</p></div></div>
-  <div class="card">
-    <h3>＋ Add a profile</h3>
-    <div class="social-form">
-      <div><label class="muted">Platform</label><select class="input" id="socialPlatform"></select></div>
-      <div><label class="muted">Username or profile URL</label><input class="input" id="socialUsername" placeholder="@yourusername or https://..."></div>
+    <div class="row">
+      <span class="muted" id="systemClock">SYSTEM ONLINE</span>
+      <button class="secondary" id="homeBtn">Dashboard</button>
     </div>
-    <button class="primary" id="addSocial">SAVE PROFILE</button>
-    <p class="muted">Your profile list is saved in this browser. Add a full URL for custom domains such as Netlify.</p>
+  </header>
+
+  <div class="layout">
+    <aside class="sidebar" id="sidebar">
+      <div class="nav-label">MAIN SYSTEM</div>
+      <button class="nav-btn active" data-page="dashboard">◈ Dashboard</button>
+      <button class="nav-btn" data-page="socialverse">◎ SocialVerse</button>
+      <button class="nav-btn" data-page="bioverse">♧ BioVerse</button>
+      <button class="nav-btn" data-page="capvitals">♡ CAP VITALS</button>
+
+      <div class="nav-label">CREATIVE LABS</div>
+      <button class="nav-btn" data-page="coding">⌘ Coding Lab</button>
+      <button class="nav-btn" data-page="imagestudio">▧ Image Studio</button>
+      <button class="nav-btn" data-page="projects">▤ Projects</button>
+
+      <div class="nav-label">SYSTEM</div>
+      <button class="nav-btn" data-page="ai">✧ AI Engine</button>
+      <button class="nav-btn" data-page="themes">◐ Themes</button>
+      <button class="nav-btn" data-page="settings">⚙ Settings</button>
+    </aside>
+
+    <main>
+
+      <!-- DASHBOARD -->
+      <section class="page active" id="dashboard">
+        <div class="page-head">
+          <div class="eyebrow">COMMAND CENTER / OVERVIEW</div>
+          <h2>Welcome to Cap Verse</h2>
+          <p class="muted">Your personal digital workspace.</p>
+        </div>
+
+        <div class="grid">
+          <div class="panel">
+            <div class="card-title">SYSTEM STATUS</div>
+            <div class="metric">ONLINE</div>
+            <small>Local interface active</small>
+          </div>
+          <div class="panel">
+            <div class="card-title">SOCIAL PROFILES</div>
+            <div class="metric" id="socialCount">0</div>
+            <small>Saved profile links</small>
+          </div>
+          <div class="panel">
+            <div class="card-title">BODY SYSTEMS</div>
+            <div class="metric">12</div>
+            <small>BioVerse learning categories</small>
+          </div>
+          <div class="panel">
+            <div class="card-title">VITAL TRACKERS</div>
+            <div class="metric">12</div>
+            <small>Manual tracking tools</small>
+          </div>
+        </div>
+
+        <h3 style="margin-top:30px">Explore Your Universe</h3>
+        <div class="grid">
+          <div class="panel feature-card" data-open="socialverse">
+            <div class="feature-icon">◎</div><h3>SocialVerse</h3>
+            <small>Manage your online identity.</small>
+          </div>
+          <div class="panel feature-card" data-open="bioverse">
+            <div class="feature-icon">♧</div><h3>BioVerse</h3>
+            <small>Explore human anatomy and 3D models.</small>
+          </div>
+          <div class="panel feature-card" data-open="capvitals">
+            <div class="feature-icon">♡</div><h3>CAP VITALS</h3>
+            <small>Track daily wellness entries.</small>
+          </div>
+          <div class="panel feature-card" data-open="coding">
+            <div class="feature-icon">⌘</div><h3>Coding Lab</h3>
+            <small>Keep your coding snippets.</small>
+          </div>
+          <div class="panel feature-card" data-open="imagestudio">
+            <div class="feature-icon">▧</div><h3>Image Studio</h3>
+            <small>Preview your images.</small>
+          </div>
+          <div class="panel feature-card" data-open="ai">
+            <div class="feature-icon">✧</div><h3>AI Engine</h3>
+            <small>Premium AI connection area.</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- SOCIALVERSE -->
+      <section class="page" id="socialverse">
+        <div class="page-head">
+          <div class="eyebrow">IDENTITY MANAGEMENT</div>
+          <h2>SocialVerse</h2>
+          <p class="muted">Add your social accounts and open their profiles directly.</p>
+        </div>
+
+        <div class="panel stack">
+          <h3>Add a Profile</h3>
+          <div class="form-grid">
+            <select id="socialPlatform"><option value="">Select platform</option></select>
+            <input id="socialUsername" placeholder="Username or full profile URL">
+          </div>
+          <button id="addSocial">＋ Add Profile</button>
+          <small>For platforms without a reliable username URL format, paste the full profile URL.</small>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <div class="row" style="justify-content:space-between">
+            <h3>Your Profiles</h3>
+            <span class="muted" id="socialCountPage">0 profiles</span>
+          </div>
+          <input id="socialSearch" placeholder="Search profiles..." style="margin:8px 0">
+          <div id="socialList"></div>
+          <p class="muted" id="socialEmpty">No profiles added yet.</p>
+        </div>
+      </section>
+
+      <!-- BIOVERSE -->
+      <section class="page" id="bioverse">
+        <div class="page-head">
+          <div class="eyebrow">HUMAN ANATOMY EXPLORER</div>
+          <h2>BioVerse</h2>
+          <p class="muted">Study body systems and load interactive 3D anatomy models.</p>
+        </div>
+
+        <div class="panel stack">
+          <h3>3D Anatomy Viewer</h3>
+          <p class="muted">Upload a GLB or GLTF model file. Drag to rotate and use pinch/scroll to zoom.</p>
+          <input type="file" id="anatomyFile" accept=".glb,.gltf,model/gltf-binary,model/gltf+json">
+          <canvas id="anatomyCanvas"></canvas>
+          <div class="row">
+            <button class="secondary" id="reset3D">Reset View</button>
+            <button class="secondary" id="clear3D">Clear Model</button>
+          </div>
+          <p class="status" id="anatomyStatus">No 3D model loaded. Upload a model to begin.</p>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <h3>12 Major Body Systems</h3>
+          <div class="grid" id="anatomyCategories"></div>
+          <div class="panel" style="margin-top:15px" id="anatomyDetail">
+            Select a body system to see its description.
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:16px">
+          <h3>Additional Anatomy Topics</h3>
+          <div class="grid" id="anatomyOrgans"></div>
+        </div>
+      </section>
+
+      <!-- CAP VITALS -->
+      <section class="page" id="capvitals">
+        <div class="page-head">
+          <div class="eyebrow">PERSONAL WELLNESS TRACKER</div>
+          <h2>CAP VITALS</h2>
+          <p class="muted">Record your wellness information manually.</p>
+        </div>
+        <div class="panel" style="margin-bottom:16px">
+          <strong>Important:</strong>
+          <small>These are manual logs, not medical measurements. This website cannot independently read your heart rate, blood oxygen or sleep data.</small>
+        </div>
+        <div class="grid" id="vitalGrid"></div>
+      </section>
+
+      <!-- CODING LAB -->
+      <section class="page" id="coding">
+        <div class="page-head">
+          <div class="eyebrow">DEVELOPMENT ENVIRONMENT</div>
+          <h2>Coding Lab</h2>
+          <p class="muted">Write and save your own code snippets locally.</p>
+        </div>
+        <div class="panel stack">
+          <input id="codeTitle" placeholder="Snippet title">
+          <select id="codeLanguage">
+            <option>HTML</option><option>CSS</option><option>JavaScript</option>
+            <option>Python</option><option>Java</option><option>Other</option>
+          </select>
+          <textarea id="codeInput" rows="10" placeholder="Write your code here..."></textarea>
+          <button id="saveCode">Save Snippet</button>
+          <div id="codeList"></div>
+        </div>
+      </section>
+
+      <!-- IMAGE STUDIO -->
+      <section class="page" id="imagestudio">
+        <div class="page-head">
+          <div class="eyebrow">CREATIVE WORKSPACE</div>
+          <h2>Image Studio</h2>
+          <p class="muted">Preview images from your device.</p>
+        </div>
+        <div class="panel stack">
+          <input type="file" id="imageInput" accept="image/*">
+          <img id="imagePreview" class="hidden" alt="Selected image preview">
+          <p id="imageInfo" class="muted">No image selected.</p>
+        </div>
+      </section>
+
+      <!-- PROJECTS -->
+      <section class="page" id="projects">
+        <div class="page-head">
+          <div class="eyebrow">WORKSPACE ORGANIZER</div>
+          <h2>Projects</h2>
+          <p class="muted">Save project names and notes on this device.</p>
+        </div>
+        <div class="panel stack">
+          <input id="projectName" placeholder="Project name">
+          <textarea id="projectNote" rows="4" placeholder="Project notes..."></textarea>
+          <button id="addProject">Add Project</button>
+          <div id="projectList"></div>
+        </div>
+      </section>
+
+      <!-- AI ENGINE -->
+      <section class="page" id="ai">
+        <div class="page-head">
+          <div class="eyebrow">INTELLIGENCE MODULE</div>
+          <h2>AI Engine</h2>
+        </div>
+        <div class="panel" style="text-align:center;padding:35px 18px">
+          <div style="font-size:45px">✧</div>
+          <h2>Premium AI Engine</h2>
+          <p class="muted">AI integration is currently not connected.</p>
+          <p class="muted">A secure backend and API configuration are required before AI chat can work. Never place a private API key in this public HTML file.</p>
+          <button class="secondary" disabled>ENGINE LOCKED</button>
+        </div>
+      </section>
+
+      <!-- THEMES -->
+      <section class="page" id="themes">
+        <div class="page-head">
+          <div class="eyebrow">INTERFACE CUSTOMIZATION</div>
+          <h2>Themes</h2>
+          <p class="muted">Choose your preferred command-center appearance.</p>
+        </div>
+        <div class="grid">
+          <div class="panel"><h3>JARVIS Blue</h3><button data-theme="blue">Apply</button></div>
+          <div class="panel"><h3>Emerald Core</h3><button data-theme="green">Apply</button></div>
+          <div class="panel"><h3>Crimson Mode</h3><button data-theme="red">Apply</button></div>
+          <div class="panel"><h3>Purple Nebula</h3><button data-theme="purple">Apply</button></div>
+          <div class="panel"><h3>Golden Core</h3><button data-theme="gold">Apply</button></div>
+        </div>
+      </section>
+
+      <!-- SETTINGS -->
+      <section class="page" id="settings">
+        <div class="page-head">
+          <div class="eyebrow">SYSTEM PREFERENCES</div>
+          <h2>Settings</h2>
+        </div>
+        <div class="panel stack">
+          <h3>Local Data</h3>
+          <p class="muted">Your profiles, notes and tracking entries are stored in this browser's local storage.</p>
+          <button class="danger" id="clearData">Clear All Local Data</button>
+          <small>This action permanently clears saved data for this website on this device.</small>
+          <hr>
+          <h3>About</h3>
+          <p>CAP VERSE — Personal Digital Intelligence Workspace.</p>
+          <p class="muted">Version 1.0</p>
+        </div>
+      </section>
+
+      <footer>CAP VERSE · DIGITAL INTELLIGENCE WORKSPACE</footer>
+    </main>
   </div>
-  <div class="section-head"><h2>My Profiles</h2><input class="input" id="socialSearch" style="max-width:240px" placeholder="Search profiles..."></div>
-  <div class="social-list" id="socialList"></div>
-  <p class="muted" id="socialEmpty">No profiles added yet. Select a platform and add your username.</p>
-</section>
-
-<section class="page" id="page-bio">
-  <div class="eyebrow">HUMAN BIOLOGY DATABASE</div><h1>BioVerse</h1>
-  <p>Choose a system or anatomy category to explore its structures and functions.</p>
-  <div class="viewer" id="anatomyViewer"><div class="viewer-inner"><div class="viewer-figure">🧍</div><h3>ANATOMY EXPLORER</h3><p class="viewer-note">Select a category below to view its educational overview.</p></div></div>
-  <div class="anatomy-grid" id="anatomyCategories"></div>
-  <div class="detail" id="anatomyDetail"><h3>Welcome to BioVerse</h3><p>Select a category to see its organs, structures and functions.</p></div>
-</section>
-
-<section class="page" id="page-vitals">
-  <div class="eyebrow">PERSONAL WELLNESS</div><h1>CAP VITALS</h1><p>Track manually entered information. This website does not measure medical readings by itself.</p>
-  <div class="vital-grid" id="vitalGrid"></div>
-  <div class="detail" id="vitalDetail"><h3>Wellness Dashboard</h3><p>Select a tool to enter or review your information.</p></div>
-</section>
-
-<section class="page" id="page-ai">
-  <div class="eyebrow">INTELLIGENCE ACCESS</div><h1>AI ENGINE</h1>
-  <div class="card"><div class="lock">🔒 PREMIUM ACCESS</div><h2>AI tools are locked</h2><p>AI chat, coding, analysis and voice features require a secure backend and authorized API access.</p><button class="primary" disabled>PREMIUM LOCKED</button></div>
-</section>
-
-<section class="page" id="page-themes">
-  <div class="eyebrow">PERSONALIZATION</div><h1>THEMES</h1><p>Choose your command center appearance.</p>
-  <div class="cards">
-    <div class="card"><h3>JARVIS Blue</h3><button class="card-action" onclick="setTheme('blue')">Activate</button></div>
-    <div class="card"><h3>Emerald Core</h3><button class="card-action" onclick="setTheme('green')">Activate</button></div>
-    <div class="card"><h3>Crimson Mode</h3><button class="card-action" onclick="setTheme('red')">Activate</button></div>
-  </div>
-</section>
-<div class="footer">CAP VERSE • YOUR DIGITAL UNIVERSE</div>
-</main>
 </div>
-</div>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+
+const $ = id => document.getElementById(id);
+const read = (key, fallback) => {
+  try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+  catch { return fallback; }
+};
+const save = (key, value) => {
+  try { localStorage.setItem(key, JSON.stringify(value)); }
+  catch (error) { console.warn("Could not save data", error); }
+};
+
+/* INITIALIZE */
+$("initializeBtn").addEventListener("click", () => {
+  $("intro").style.display = "none";
+  $("app").style.display = "block";
+  showPage("dashboard");
+});
+
+/* NAVIGATION */
+const pageIds = [
+  "dashboard","socialverse","bioverse","capvitals",
+  "coding","imagestudio","projects","ai","themes","settings"
+];
+
+function showPage(id) {
+  if (!pageIds.includes(id)) id = "dashboard";
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.toggle("active", page.id === id);
+  });
+  document.querySelectorAll(".nav-btn").forEach(button => {
+    button.classList.toggle("active", button.dataset.page === id);
+  });
+  $("sidebar").classList.remove("open");
+  if (id === "bioverse") setTimeout(resize3D, 100);
+}
+window.showPage = showPage;
+
+document.querySelectorAll(".nav-btn").forEach(button => {
+  button.addEventListener("click", () => showPage(button.dataset.page));
+});
+document.querySelectorAll("[data-open]").forEach(card => {
+  card.addEventListener("click", () => showPage(card.dataset.open));
+});
+$("homeBtn").addEventListener("click", () => showPage("dashboard"));
+$("menuBtn").addEventListener("click", () => $("sidebar").classList.toggle("open"));
+
+/* CLOCK */
+function updateClock() {
+  $("systemClock").textContent = new Date().toLocaleTimeString();
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+/* THEMES */
+const themeMap = {
+  blue:["#06111f","#00c8ff","#0d1c2e"],
+  green:["#071710","#00e6a0","#103b2d"],
+  red:["#19090d","#ff466c","#421522"],
+  purple:["#120b20","#b58aff","#30204b"],
+  gold:["#171208","#ffc857","#453315"]
+};
+function setTheme(name) {
+  const t = themeMap[name] || themeMap.blue;
+  document.documentElement.style.setProperty("--bg",t[0]);
+  document.documentElement.style.setProperty("--accent",t[1]);
+  document.documentElement.style.setProperty("--panel",t[2]);
+  document.body.style.background = t[0];
+  save("cv_theme",name);
+}
+document.querySelectorAll("[data-theme]").forEach(button => {
+  button.addEventListener("click", () => setTheme(button.dataset.theme));
+});
+setTheme(read("cv_theme","blue"));
+
+/* SOCIALVERSE */
+const platforms = {
+  "Instagram":"https://www.instagram.com/",
+  "TikTok":"https://www.tiktok.com/@",
+  "Reddit":"https://www.reddit.com/user/",
+  "GitHub":"https://github.com/",
+  "Netlify":null,
+  "YouTube":"https://www.youtube.com/@",
+  "Facebook":"https://www.facebook.com/",
+  "X / Twitter":"https://x.com/",
+  "LinkedIn":"https://www.linkedin.com/in/",
+  "Pinterest":"https://www.pinterest.com/",
+  "Snapchat":"https://www.snapchat.com/add/",
+  "Telegram":"https://t.me/",
+  "Discord":null,
+  "Twitch":"https://www.twitch.tv/",
+  "Threads":"https://www.threads.net/@",
+  "Medium":"https://medium.com/@",
+  "Behance":"https://www.behance.net/",
+  "Dribbble":"https://dribbble.com/",
+  "CodePen":"https://codepen.io/",
+  "Replit":"https://replit.com/@",
+  "Stack Overflow":null,
+  "Dev.to":"https://dev.to/",
+  "Product Hunt":"https://www.producthunt.com/@",
+  "Kaggle":"https://www.kaggle.com/",
+  "Hugging Face":"https://huggingface.co/",
+  "Figma":null,
+  "Buy Me a Coffee":"https://buymeacoffee.com/",
+  "Ko-fi":"https://ko-fi.com/",
+  "Patreon":"https://www.patreon.com/",
+  "SoundCloud":"https://soundcloud.com/",
+  "Spotify":"https://open.spotify.com/user/",
+  "Apple Music":null,
+  "WhatsApp":null,
+  "Google Play":null,
+  "WordPress":"https://wordpress.com/",
+  "Blogger":"https://www.blogger.com/",
+  "Tumblr":"https://www.tumblr.com/",
+  "Vimeo":"https://vimeo.com/",
+  "Kick":"https://kick.com/",
+  "Linktree":"https://linktr.ee/",
+  "MyLinks Hub":"https://mylinkshub-pk.netlify.app/?profile=",
+  "Nexora":"https://captain0031-cloud.github.io/Nexora/",
+  "Cap Verse":"https://cap-verse.netlify.app/",
+  "Mastodon":null,
+  "GitLab":"https://gitlab.com/",
+  "Bitbucket":"https://bitbucket.org/",
+  "Unsplash":"https://unsplash.com/@",
+  "Flickr":"https://www.flickr.com/people/",
+  "Quora":"https://www.quora.com/profile/",
+  "Gumroad":"https://gumroad.com/",
+  "Substack":"https://substack.com/@",
+  "Letterboxd":"https://letterboxd.com/",
+  "Chess.com":"https://www.chess.com/member/",
+  "Strava":"https://www.strava.com/athletes/"
+};
+
+const socialSelect = $("socialPlatform");
+Object.keys(platforms).sort().forEach(name => {
+  const option = document.createElement("option");
+  option.value = name;
+  option.textContent = name;
+  socialSelect.appendChild(option);
+});
+
+let socialItems = read("cv_social",[]);
+
+function makeProfileURL(platform,value) {
+  const raw = value.trim();
+  if (!raw) return null;
+
+  if (/^https?:\/\//i.test(raw)) {
+    try {
+      const parsed = new URL(raw);
+      if (!["http:","https:"].includes(parsed.protocol)) return null;
+      return parsed.href;
+    } catch { return null; }
+  }
+
+  if (raw.includes("://") || /\s/.test(raw)) return null;
+  const base = platforms[platform];
+  if (!base) return null;
+  const username = raw.replace(/^@/,"").replace(/^\/+|\/+$/g,"");
+  return username ? base + encodeURIComponent(username) : null;
+}
+
+function renderSocial() {
+  const holder = $("socialList");
+  holder.innerHTML = "";
+  const search = $("socialSearch").value.toLowerCase().trim();
+  const matches = socialItems.filter(item =>
+    (item.platform+" "+item.username).toLowerCase().includes(search)
+  );
+
+  $("socialEmpty").style.display = matches.length ? "none" : "block";
+  $("socialCount").textContent = socialItems.length;
+  $("socialCountPage").textContent = socialItems.length + " profiles";
+
+  matches.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "social-card";
+    const info = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = item.platform;
+    const username = document.createElement("small");
+    username.textContent = item.username;
+    const link = document.createElement("a");
+    link.href = item.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = "Open Profile ↗";
+    info.append(title,username,link);
+
+    const remove = document.createElement("button");
+    remove.className = "danger";
+    remove.textContent = "Delete";
+    remove.addEventListener("click",() => {
+      socialItems = socialItems.filter(x => x.id !== item.id);
+      save("cv_social",socialItems);
+      renderSocial();
+    });
+    card.append(info,remove);
+    holder.appendChild(card);
+  });
+}
+
+$("addSocial").addEventListener("click",() => {
+  const platform = socialSelect.value;
+  const username = $("socialUsername").value.trim();
+  if (!platform || !username) return alert("Select a platform and enter a username or URL.");
+
+  const url = makeProfileURL(platform,username);
+  if (!url) return alert("Please enter a full profile URL for this platform.");
+
+  socialItems.push({
+    id:Date.now().toString()+Math.random().toString(16).slice(2),
+    platform,username,url
+  });
+  save("cv_social",socialItems);
+  $("socialUsername").value = "";
+  socialSelect.value = "";
+  renderSocial();
+});
+$("socialSearch").addEventListener("input",renderSocial);
+renderSocial();
+
+/* CAP VITALS */
+const vitalTools = [
+  ["Step Counter","steps","number","Steps walked today"],
+  ["Heart Rate","heart","number","Heart rate in BPM"],
+  ["Calories Burned","calories","number","Calories burned"],
+  ["Walking Tracker","walking","text","Walking activity notes"],
+  ["Distance Tracker","distance","number","Distance in kilometres"],
+  ["Sleep Tracker","sleep","number","Sleep hours"],
+  ["Breathing Tracker","breathing","number","Breaths per minute"],
+  ["SpO₂ Monitor","spo2","number","SpO2 percentage"],
+  ["Water Tracker","water","number","Water glasses"],
+  ["BMI Tracker","bmi","text","Weight kg, height cm"],
+  ["Fitness Goals","goals","text","Your fitness goal"],
+  ["Health Dashboard","health","text","Daily health notes"]
+];
+
+let vitalData = read("cv_vitals",{});
+vitalTools.forEach(([name,key,type,label]) => {
+  const card = document.createElement("div");
+  card.className = "tool-card";
+  const heading = document.createElement("h3");
+  heading.textContent = name;
+  const caption = document.createElement("label");
+  caption.textContent = label;
+  const input = document.createElement("input");
+  input.type = type;
+  input.placeholder = label;
+  input.value = vitalData[key] ?? "";
+  const button = document.createElement("button");
+  button.textContent = "Save Entry";
+  const status = document.createElement("p");
+  status.className = "status";
+  status.textContent = vitalData[key] ? "Saved: "+vitalData[key] : "No saved entry";
+  button.addEventListener("click",() => {
+    if (!input.value.trim()) return alert("Enter a value first.");
+    vitalData[key] = input.value.trim();
+    save("cv_vitals",vitalData);
+    status.textContent = "Saved: "+vitalData[key];
+  });
+  card.append(heading,caption,input,button,status);
+  $("vitalGrid").appendChild(card);
+});
+
+/* BIOVERSE CONTENT */
+const systems = [
+  ["Skeletal System","Bones support the body, protect organs and help movement."],
+  ["Muscular System","Muscles produce movement and maintain posture."],
+  ["Nervous System","Brain, spinal cord and nerves coordinate body activity."],
+  ["Circulatory System","Heart and blood vessels transport blood."],
+  ["Respiratory System","Lungs and airways support gas exchange."],
+  ["Digestive System","Organs break down food and absorb nutrients."],
+  ["Urinary System","Kidneys and urinary tract remove waste."],
+  ["Endocrine System","Glands produce hormones that regulate body functions."],
+  ["Lymphatic System","Lymph vessels help fluid balance and immune function."],
+  ["Immune System","Cells and organs defend against pathogens."],
+  ["Integumentary System","Skin, hair and nails protect the body."],
+  ["Reproductive System","Organs support human reproduction."]
+];
+const organs = [
+  ["Brain","Coordinates thought, movement and many body functions."],
+  ["Heart","Pumps blood through the circulatory system."],
+  ["Lungs","Exchange oxygen and carbon dioxide."],
+  ["Liver","Processes nutrients and many substances."],
+  ["Stomach","Helps digest food."],
+  ["Kidneys","Filter blood and produce urine."],
+  ["Spinal Cord","Carries signals between brain and body."],
+  ["Eyes","Provide vision."],
+  ["Skin","Forms the body's outer protective barrier."]
+];
+
+function addAnatomyCards(items,holder) {
+  items.forEach(([name,description]) => {
+    const card = document.createElement("button");
+    card.className = "secondary";
+    card.textContent = name;
+    card.style.textAlign = "left";
+    card.addEventListener("click",() => {
+      $("anatomyDetail").innerHTML = "";
+      const title = document.createElement("h3");
+      title.textContent = name;
+      const desc = document.createElement("p");
+      desc.textContent = description;
+      $("anatomyDetail").append(title,desc);
+    });
+    holder.appendChild(card);
+  });
+}
+addAnatomyCards(systems,$("anatomyCategories"));
+addAnatomyCards(organs,$("anatomyOrgans"));
+
+/* BIOVERSE THREE-D VIEWER */
+const canvas = $("anatomyCanvas");
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x030d18);
+
+const camera = new THREE.PerspectiveCamera(45,1,0.1,1000);
+camera.position.set(0,1,5);
+
+const renderer = new THREE.WebGLRenderer({
+  canvas,antialias:true,alpha:false
+});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1,2));
+
+const controls = new OrbitControls(camera,renderer.domElement);
+controls.enableDamping = true;
+controls.target.set(0,0,0);
+
+scene.add(new THREE.HemisphereLight(0xffffff,0x24364b,2));
+const keyLight = new THREE.DirectionalLight(0xffffff,2);
+keyLight.position.set(4,6,5);
+scene.add(keyLight);
+
+let currentModel = null;
+let currentObjectURL = null;
+
+function resize3D() {
+  const width = canvas.clientWidth;
+  const height = canvas.clientHeight;
+  if (!width || !height) return;
+  camera.aspect = width/height;
+  camera.updateProjectionMatrix();
+  renderer.setSize(width,height,false);
+}
+window.addEventListener("resize",resize3D);
+resize3D();
+
+function animate3D() {
+  requestAnimationFrame(animate3D);
+  controls.update();
+  renderer.render(scene,camera);
+}
+animate3D();
+
+function clearModel() {
+  if (currentModel) {
+    scene.remove(currentModel);
+    currentModel.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        const materials = Array.isArray(obj.material) ? obj.material : [obj.material];
+        materials.forEach(material => material.dispose());
+      }
+    });
+    currentModel = null;
+  }
+  if (currentObjectURL) {
+    URL.revokeObjectURL(currentObjectURL);
+    currentObjectURL = null;
+  }
+}
+
+$("anatomyFile").addEventListener("change",event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+
+  if (!/\.(glb|gltf)$/i.test(file.name)) {
+    $("anatomyStatus").textContent = "Please choose a .glb or .gltf model file.";
+    return;
+  }
+
+  clearModel();
+  $("anatomyStatus").textContent = "Loading model...";
+
+  const loader = new GLTFLoader();
+  currentObjectURL = URL.createObjectURL(file);
+
+  loader.load(currentObjectURL,gltf => {
+    currentModel = gltf.scene;
+    scene.add(currentModel);
+
+    const bounds = new THREE.Box3().setFromObject(currentModel);
+    const center = bounds.getCenter(new THREE.Vector3());
+    const size = bounds.getSize(new THREE.Vector3());
+    currentModel.position.sub(center);
+
+    const maxSize = Math.max(size.x,size.y,size.z) || 1;
+    camera.position.set(0,maxSize*.2,maxSize*2.5);
+    controls.target.set(0,0,0);
+    controls.update();
+
+    $("anatomyStatus").textContent =
+      "Model loaded. Drag to rotate; pinch or scroll to zoom. Organ labels depend on the model file.";
+    resize3D();
+  },undefined,error => {
+    console.error(error);
+    $("anatomyStatus").textContent =
+      "Could not load model. Check the file and try another GLB/GLTF.";
+  });
+});
+
+$("reset3D").addEventListener("click",() => {
+  camera.position.set(0,1,5);
+  controls.target.set(0,0,0);
+  controls.update();
+});
+$("clear3D").addEventListener("click",() => {
+  clearModel();
+  $("anatomyFile").value = "";
+  $("anatomyStatus").textContent = "Model cleared. Upload another model.";
+});
+
+/* CODING LAB */
+let snippets = read("cv_snippets",[]);
+function renderSnippets() {
+  const holder = $("codeList");
+  holder.innerHTML = "";
+  snippets.forEach(item => {
+    const card = document.createElement("div");
+    card.className = "tool-card";
+    const heading = document.createElement("h3");
+    heading.textContent = item.title+" · "+item.language;
+    const code = document.createElement("pre");
+    code.textContent = item.code;
+    const row = document.createElement("div");
+    row.className = "row";
+    const copy = document.createElement("button");
+    copy.textContent = "Copy";
+    copy.addEventListener("click",async() => {
+      try {
+        await navigator.clipboard.writeText(item.code);
+        copy.textContent = "Copied!";
+      } catch { alert("Clipboard permission unavailable."); }
+    });
+    const remove = document.createElement("button");
+    remove.className = "danger";
+    remove.textContent = "Delete";
+    remove.addEventListener("click",() => {
+      snippets = snippets.filter(x => x.id !== item.id);
+      save("cv_snippets",snippets);
+      renderSnippets();
+    });
+    row.append(copy,remove);
+    card.append(heading,code,row);
+    holder.appendChild(card);
+  });
+}
+$("saveCode").addEventListener("click",() => {
+  const title = $("codeTitle").value.trim();
+  const code = $("codeInput").value;
+  if (!title || !code.trim()) return alert("Enter a title and code.");
+  snippets.unshift({
+    id:Date.now().toString(),
+    title,
+    language:$("codeLanguage").value,
+    code
+  });
+  save("cv_snippets",snippets);
+  $("codeTitle").value = "";
+  $("codeInput").value = "";
+  renderSnippets();
+});
+renderSnippets();
+
+/* IMAGE STUDIO */
+let previewURL = null;
+$("imageInput").addEventListener("change",event => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  if (!file.type.startsWith("image/")) return alert("Choose an image file.");
+  if (previewURL) URL.revokeObjectURL(previewURL);
+  previewURL = URL.createObjectURL(file);
+  $("imagePreview").src = previewURL;
+  $("imagePreview").classList.remove("hidden");
+  $("imageInfo").textContent = file.name+" · "+Math.round(file.size/1024)+" KB";
+});
+
+/* PROJECTS */
+let projects = read("cv_projects",[]);
+function renderProjects() {
+  const holder = $("projectList");
+  holder.innerHTML = "";
+  projects.forEach(project => {
+    const card = document.createElement("div");
+    card.className = "tool-card";
+    const title = document.createElement("h3");
+    title.textContent = project.name;
+    const note = document.createElement("p");
+    note.textContent = project.note;
+    const remove = document.createElement("button");
+    remove.className = "danger";
+    remove.textContent = "Delete";
+    remove.addEventListener("click",() => {
+      projects = projects.filter(x => x.id !== project.id);
+      save("cv_projects",projects);
+      renderProjects();
+    });
+    card.append(title,note,remove);
+    holder.appendChild(card);
+  });
+}
+$("addProject").addEventListener("click",() => {
+  const name = $("projectName").value.trim();
+  const note = $("projectNote").value.trim();
+  if (!name) return alert("Enter a project name.");
+  projects.unshift({id:Date.now().toString(),name,note});
+  save("cv_projects",projects);
+  $("projectName").value = "";
+  $("projectNote").value = "";
+  renderProjects();
+});
+renderProjects();
+
+/* CLEAR DATA */
+$("clearData").addEventListener("click",() => {
+  const confirmed = confirm("Clear all saved CAP VERSE data from this browser?");
+  if (!confirmed) return;
+  [
+    "cv_social","cv_vitals","cv_snippets","cv_projects","cv_theme"
+  ].forEach(key => localStorage.removeItem(key));
+  alert("Local data cleared. Reload the page to refresh all sections.");
+});
+
+/* ERROR REPORTING */
+window.addEventListener("error",event => {
+  console.error("CAP VERSE error:",event.message);
+});
+
+console.log("CAP VERSE application ready.");
+</script>
 </body>
 </html>
-
-<script>
-(() => {
-  "use strict";
-
-  const $ = id => document.getElementById(id);
-
-  const save = (key, value) => {
-    try { localStorage.setItem(key, JSON.stringify(value)); }
-    catch (e) { console.warn("Storage unavailable", e); }
-  };
-
-  const read = (key, fallback) => {
-    try {
-      const value = JSON.parse(localStorage.getItem(key));
-      return value ?? fallback;
-    } catch (e) { return fallback; }
-  };
-
-  /* NAVIGATION */
-
-  const pages = [
-    "dashboard", "socialverse", "bioverse", "capvitals",
-    "ai", "themes", "tools", "settings"
-  ];
-
-  window.showPage = function (page) {
-    const target = String(page || "").toLowerCase().replace(/[^a-z]/g, "");
-    let found = false;
-
-    pages.forEach(name => {
-      const section = $(name);
-      if (section) {
-        section.style.display = name === target ? "block" : "none";
-        if (name === target) found = true;
-      }
-    });
-
-    document.querySelectorAll("[data-page]").forEach(button => {
-      button.classList.toggle("active", button.dataset.page === target);
-    });
-
-    if (target === "bioverse") {
-      setTimeout(initAnatomyViewer, 150);
-    }
-
-    if (!found) console.warn("Page section not found:", target);
-  };
-
-  window.enterVerse = function (page = "dashboard") {
-    const intro = $("introScreen") || $("intro") ||
-      document.querySelector(".intro-screen");
-    if (intro) intro.style.display = "none";
-    window.showPage(page);
-  };
-
-  window.initializeSystem = function () {
-    window.enterVerse("dashboard");
-  };
-
-  document.addEventListener("click", event => {
-    const nav = event.target.closest("[data-page]");
-    if (nav) {
-      event.preventDefault();
-      window.showPage(nav.dataset.page);
-    }
-  });
-
-  /* THEMES */
-
-  const themes = {
-    blue: ["#07111f", "#00c8ff", "#102b46"],
-    green: ["#071710", "#00e6a0", "#103b2d"],
-    red: ["#19090d", "#ff466c", "#421522"],
-    purple: ["#120b20", "#b58aff", "#30204b"],
-    gold: ["#171208", "#ffc857", "#453315"]
-  };
-
-  window.setTheme = function (name) {
-    const selected = themes[name] || themes.blue;
-    document.documentElement.style.setProperty("--bg", selected[0]);
-    document.documentElement.style.setProperty("--accent", selected[1]);
-    document.documentElement.style.setProperty("--panel", selected[2]);
-    document.body.style.backgroundColor = selected[0];
-    save("capverse_theme", name in themes ? name : "blue");
-  };
-
-  window.setTheme(read("capverse_theme", "blue"));
-
-  /* SOCIALVERSE */
-
-  const platforms = {
-    "Instagram": "https://www.instagram.com/",
-    "TikTok": "https://www.tiktok.com/@",
-    "Reddit": "https://www.reddit.com/user/",
-    "GitHub": "https://github.com/",
-    "Netlify": null,
-    "YouTube": "https://www.youtube.com/@",
-    "Facebook": "https://www.facebook.com/",
-    "X (Twitter)": "https://x.com/",
-    "LinkedIn": "https://www.linkedin.com/in/",
-    "Pinterest": "https://www.pinterest.com/",
-    "Snapchat": "https://www.snapchat.com/add/",
-    "Telegram": "https://t.me/",
-    "Discord": null,
-    "Twitch": "https://www.twitch.tv/",
-    "Threads": "https://www.threads.net/@",
-    "Medium": "https://medium.com/@",
-    "Behance": "https://www.behance.net/",
-    "Dribbble": "https://dribbble.com/",
-    "CodePen": "https://codepen.io/",
-    "Replit": "https://replit.com/@",
-    "Stack Overflow": null,
-    "Dev.to": "https://dev.to/",
-    "Product Hunt": "https://www.producthunt.com/@",
-    "Kaggle": "https://www.kaggle.com/",
-    "Hugging Face": "https://huggingface.co/",
-    "Figma": null,
-    "Buy Me a Coffee": "https://buymeacoffee.com/",
-    "Ko-fi": "https://ko-fi.com/",
-    "Patreon": "https://www.patreon.com/",
-    "SoundCloud": "https://soundcloud.com/",
-    "Spotify": "https://open.spotify.com/user/",
-    "Apple Music": null,
-    "WhatsApp": null,
-    "Google Play": null,
-    "WordPress": "https://wordpress.com/",
-    "Blogger": "https://www.blogger.com/",
-    "Tumblr": "https://www.tumblr.com/",
-    "Vimeo": "https://vimeo.com/",
-    "Kick": "https://kick.com/",
-    "Linktree": "https://linktr.ee/",
-    "MyLinks Hub": "https://mylinkshub-pk.netlify.app/?profile=",
-    "Nexora": "https://captain0031-cloud.github.io/Nexora/",
-    "Cap Verse": "https://cap-verse.netlify.app/"
-  };
-
-  const platformSelect = $("socialPlatform");
-  const socialInput = $("socialUsername");
-  const socialList = $("socialList");
-  const socialSearch = $("socialSearch");
-  const socialEmpty = $("socialEmpty");
-
-  if (platformSelect) {
-    platformSelect.innerHTML = '<option value="">Select platform</option>';
-    Object.keys(platforms).sort().forEach(name => {
-      const option = document.createElement("option");
-      option.value = name;
-      option.textContent = name;
-      platformSelect.appendChild(option);
-    });
-  }
-
-  let socialItems = read("capverse_social_links", []);
-
-  function makeSocialURL(platform, value) {
-    const raw = String(value || "").trim();
-    if (!raw) return null;
-
-    if (/^https?:\/\//i.test(raw)) {
-      try {
-        const url = new URL(raw);
-        return ["http:", "https:"].includes(url.protocol) ? url.href : null;
-      } catch (e) { return null; }
-    }
-
-    if (raw.includes("://") || /\s/.test(raw)) return null;
-
-    const base = platforms[platform];
-    if (!base) return null;
-
-    const clean = raw.replace(/^@/, "").replace(/^\/+|\/+$/g, "");
-    if (!clean) return null;
-
-    return base + encodeURIComponent(clean);
-  }
-
-  function renderSocials() {
-    if (!socialList) return;
-
-    socialList.innerHTML = "";
-    const term = (socialSearch?.value || "").toLowerCase().trim();
-
-    const filtered = socialItems.filter(item =>
-      (item.platform + " " + item.username + " " + item.url)
-        .toLowerCase().includes(term)
-    );
-
-    if (socialEmpty) socialEmpty.style.display = filtered.length ? "none" : "block";
-
-    filtered.forEach(item => {
-      const card = document.createElement("div");
-      card.style.cssText =
-        "display:flex;justify-content:space-between;align-items:center;" +
-        "gap:12px;padding:12px;margin:10px 0;border:1px solid rgba(0,200,255,.25);" +
-        "border-radius:12px;background:rgba(10,30,50,.55);";
-
-      const info = document.createElement("div");
-      const title = document.createElement("strong");
-      title.textContent = item.platform;
-
-      const user = document.createElement("p");
-      user.textContent = item.username;
-      user.style.cssText = "font-size:12px;overflow-wrap:anywhere;";
-
-      const link = document.createElement("a");
-      link.href = item.url;
-      link.target = "_blank";
-      link.rel = "noopener noreferrer";
-      link.textContent = "Open Profile";
-
-      info.append(title, user, link);
-
-      const remove = document.createElement("button");
-      remove.type = "button";
-      remove.textContent = "Delete";
-      remove.addEventListener("click", () => {
-        socialItems = socialItems.filter(x => x.id !== item.id);
-        save("capverse_social_links", socialItems);
-        renderSocials();
-      });
-
-      card.append(info, remove);
-      socialList.appendChild(card);
-    });
-  }
-
-  $("addSocial")?.addEventListener("click", () => {
-    const platform = platformSelect?.value;
-    const username = socialInput?.value.trim();
-
-    if (!platform || !username) {
-      alert("Platform aur username/profile URL enter karo.");
-      return;
-    }
-
-    const url = makeSocialURL(platform, username);
-    if (!url) {
-      alert("Is platform ke liye full profile URL enter karo.");
-      return;
-    }
-
-    socialItems.push({
-      id: Date.now().toString() + Math.random().toString(16).slice(2),
-      platform,
-      username,
-      url
-    });
-
-    save("capverse_social_links", socialItems);
-    socialInput.value = "";
-    platformSelect.value = "";
-    renderSocials();
-  });
-
-  socialSearch?.addEventListener("input", renderSocials);
-  renderSocials();
-
-  /* CAP VITALS */
-
-  const vitalTools = [
-    ["Step Counter", "steps", "number", "Steps today"],
-    ["Heart Rate", "heart", "number", "Heart rate (BPM)"],
-    ["Calories Burned", "calories", "number", "Calories burned"],
-    ["Walking Tracker", "walking", "text", "Walking activity notes"],
-    ["Distance Tracker", "distance", "number", "Distance in kilometres"],
-    ["Sleep Tracker", "sleep", "number", "Sleep hours"],
-    ["Breathing Tracker", "breathing", "number", "Breaths per minute"],
-    ["SpO₂ Monitor", "spo2", "number", "SpO2 percentage"],
-    ["Water Tracker", "water", "number", "Water glasses"],
-    ["BMI Tracker", "bmi", "text", "Weight kg, height cm"],
-    ["Fitness Goals", "goals", "text", "Your fitness goal"],
-    ["Health Dashboard", "health", "text", "Daily health notes"]
-  ];
-
-  let vitalData = read("capverse_vitals", {});
-
-  function renderVitals() {
-    const grid = $("vitalGrid");
-    if (!grid) return;
-
-    grid.innerHTML = "";
-
-    vitalTools.forEach(([name, key, type, label]) => {
-      const card = document.createElement("div");
-      card.style.cssText =
-        "padding:15px;margin:10px 0;border:1px solid rgba(0,200,255,.22);" +
-        "border-radius:14px;background:rgba(10,30,50,.5);";
-
-      const heading = document.createElement("h3");
-      heading.textContent = name;
-
-      const caption = document.createElement("label");
-      caption.textContent = label;
-      caption.style.display = "block";
-
-      const input = document.createElement("input");
-      input.type = type;
-      input.value = vitalData[key] ?? "";
-      input.placeholder = label;
-      input.style.cssText =
-        "box-sizing:border-box;width:100%;padding:11px;margin:8px 0;" +
-        "border-radius:9px;background:#0b1725;color:white;";
-
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = "Save";
-
-      const result = document.createElement("p");
-      result.textContent = vitalData[key] ? "Saved: " + vitalData[key] : "No entry saved.";
-
-      button.addEventListener("click", () => {
-        const value = input.value.trim();
-        if (!value) return alert("Value enter karo.");
-        vitalData[key] = value;
-        save("capverse_vitals", vitalData);
-        result.textContent = "Saved: " + value;
-      });
-
-      card.append(heading, caption, input, button, result);
-      grid.appendChild(card);
-    });
-
-    const detail = $("vitalDetail");
-    if (detail) {
-      detail.textContent =
-        "Entries are saved on this device. Heart rate and SpO2 are manual entries, not live sensor readings.";
-    }
-  }
-
-  renderVitals();
-
-  /* BIOVERSE SYSTEMS */
-
-  const anatomySystems = [
-    ["Skeletal System", "Bones support the body and protect organs."],
-    ["Muscular System", "Muscles create movement and maintain posture."],
-    ["Nervous System", "Brain, spinal cord and nerves coordinate body activity."],
-    ["Circulatory System", "Heart and blood vessels transport blood."],
-    ["Respiratory System", "Lungs and airways support gas exchange."],
-    ["Digestive System", "Organs digest food and absorb nutrients."],
-    ["Urinary System", "Kidneys and urinary tract remove waste."],
-    ["Endocrine System", "Glands release hormones."],
-    ["Lymphatic System", "Lymph vessels help fluid balance and immune defence."],
-    ["Immune System", "Cells and organs defend against pathogens."],
-    ["Integumentary System", "Skin, hair and nails protect the body."],
-    ["Reproductive System", "Organs support human reproduction."]
-  ];
-
-  const additionalAnatomy = [
-    ["Brain", "Control centre of the nervous system."],
-    ["Heart", "Muscular organ that pumps blood."],
-    ["Lungs", "Organs where gas exchange occurs."],
-    ["Liver", "Processes nutrients and many substances."],
-    ["Stomach", "Helps digest food."],
-    ["Kidneys", "Filter blood and produce urine."],
-    ["Spine", "Supports the body and protects the spinal cord."],
-    ["Eyes", "Organs responsible for vision."],
-    ["Skin", "The body's outer protective barrier."]
-  ];
-
-  const anatomyItems = [...anatomySystems, ...additionalAnatomy];
-  let selectedAnatomy = "Skeletal System";
-
-  function renderAnatomyCategories() {
-    const holder = $("anatomyCategories");
-    if (!holder) return;
-
-    holder.innerHTML = "";
-
-    anatomyItems.forEach(([name]) => {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.textContent = name;
-      button.style.cssText = "margin:5px;padding:9px 12px;border-radius:20px;";
-
-      button.addEventListener("click", () => {
-        selectedAnatomy = name;
-        renderAnatomyDetail();
-        holder.querySelectorAll("button").forEach(btn => {
-          const active = btn.textContent === name;
-          btn.style.background = active ? "var(--accent,#00c8ff)" : "";
-          btn.style.color = active ? "#07111f" : "";
-        });
-      });
-
-      holder.appendChild(button);
-    });
-  }
-
-  function renderAnatomyDetail() {
-    const detail = $("anatomyDetail");
-    if (!detail) return;
-
-    const item = anatomyItems.find(x => x[0] === selectedAnatomy);
-    if (!item) return;
-
-    detail.innerHTML = "";
-    const heading = document.createElement("h3");
-    heading.textContent = item[0];
-
-    const description = document.createElement("p");
-    description.textContent = item[1];
-
-    detail.append(heading, description);
-  }
-
-  renderAnatomyCategories();
-  renderAnatomyDetail();
-
-  /* THREE.JS MODEL LOADER */
-
-  let anatomyViewerStarted = false;
-
-  async function initAnatomyViewer() {
-    const viewer = $("anatomyViewer");
-    if (!viewer || anatomyViewerStarted) return;
-
-    anatomyViewerStarted = true;
-    viewer.innerHTML = "";
-
-    const status = document.createElement("p");
-    status.textContent = "3D viewer ready. Add a direct GLB/GLTF model URL.";
-    
-    const urlInput = document.createElement("input");
-    urlInput.type = "url";
-    urlInput.placeholder = "Paste direct .glb or .gltf model URL";
-    urlInput.style.cssText =
-      "box-sizing:border-box;width:100%;padding:10px;margin:8px 0;" +
-      "border-radius:8px;background:#0b1725;color:white;";
-
-    const loadButton = document.createElement("button");
-    loadButton.type = "button";
-    loadButton.textContent = "Load 3D Anatomy Model";
-
-    const canvasWrap = document.createElement("div");
-    canvasWrap.style.cssText =
-      "width:100%;height:380px;overflow:hidden;border-radius:14px;background:#07111f;";
-
-    viewer.append(status, urlInput, loadButton, canvasWrap);
-
-    loadButton.addEventListener("click", async () => {
-      const modelURL = urlInput.value.trim();
-
-      if (!/^https?:\/\//i.test(modelURL) ||
-          !/\.(glb|gltf)(\?.*)?$/i.test(modelURL)) {
-        status.textContent = "Enter a direct GLB or GLTF file URL.";
-        return;
-      }
-
-      status.textContent = "Loading 3D model...";
-
-      try {
-        const THREE = await import(
-          "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
-        );
-        const { OrbitControls } = await import(
-          "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js"
-        );
-        const { GLTFLoader } = await import(
-          "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js"
-        );
-
-        const scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x07111f);
-
-        const camera = new THREE.PerspectiveCamera(
-          45,
-          canvasWrap.clientWidth / canvasWrap.clientHeight,
-          0.1,
-          1000
-        );
-        camera.position.set(0, 1.5, 5);
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-        renderer.setSize(canvasWrap.clientWidth, canvasWrap.clientHeight);
-        canvasWrap.innerHTML = "";
-        canvasWrap.appendChild(renderer.domElement);
-
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.minDistance = 1;
-        controls.maxDistance = 20;
-
-        scene.add(new THREE.HemisphereLight(0xffffff, 0x334466, 2));
-
-        const light = new THREE.DirectionalLight(0xffffff, 2);
-        light.position.set(4, 6, 5);
-        scene.add(light);
-
-        const loader = new GLTFLoader();
-
-        loader.load(modelURL, gltf => {
-          const model = gltf.scene;
-          scene.add(model);
-
-          const bounds = new THREE.Box3().setFromObject(model);
-          const center = bounds.getCenter(new THREE.Vector3());
-          const size = bounds.getSize(new THREE.Vector3());
-          model.position.sub(center);
-
-          const maxSize = Math.max(size.x, size.y, size.z);
-          camera.position.set(0, maxSize * 0.2, Math.max(2.5, maxSize * 2.2));
-          controls.target.set(0, 0, 0);
-          controls.update();
-
-          status.textContent =
-            "3D model loaded. Drag to rotate and scroll/pinch to zoom.";
-        }, undefined, error => {
-          console.error(error);
-          status.textContent =
-            "Model load failed. Check URL, file format and CORS permissions.";
-        });
-
-        function animate() {
-          requestAnimationFrame(animate);
-          controls.update();
-          renderer.render(scene, camera);
-        }
-        animate();
-
-        window.addEventListener("resize", () => {
-          const width = canvasWrap.clientWidth;
-          const height = canvasWrap.clientHeight;
-          if (!width || !height) return;
-          camera.aspect = width / height;
-          camera.updateProjectionMatrix();
-          renderer.setSize(width, height);
-        });
-
-      } catch (error) {
-        console.error(error);
-        status.textContent =
-          "3D viewer could not start. Check internet and WebGL support.";
-      }
-    });
-  }
-
-  window.initAnatomyViewer = initAnatomyViewer;
-
-  /* INITIAL SETUP */
-
-  const intro = $("introScreen") || $("intro") ||
-    document.querySelector(".intro-screen");
-
-  if (!intro) window.showPage("dashboard");
-
-  console.log("CAP VERSE initialized.");
-})();
-</script>
